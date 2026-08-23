@@ -76,7 +76,14 @@ h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing
   gap:2px;padding:8px 10px 6px;font-size:20px;line-height:1}
 .aba{display:inline-block;animation:wiggle 3.2s ease-in-out infinite;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
 .aba:nth-child(2n){animation-delay:.7s}.aba:nth-child(3n){animation-delay:1.4s}
-@keyframes wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg) translateY(-2px)}}
+.aba:nth-child(2n){transform:scaleX(-1)}
+@keyframes wiggle{0%,100%{rotate:-5deg}50%{rotate:6deg;translate:0 -2px}}
+/* stage palettes for the abalone artwork (spat → jumbo) */
+.abasvg.s0{--shell:#dcc4b2;--shell2:#eadbc9;--foot:#e9d2ba;--pore:#8a6a55}
+.abasvg.s1{--shell:#a89a68;--shell2:#c2b585;--foot:#dcc09b;--pore:#4d4227}
+.abasvg.s2{--shell:#a67a56;--shell2:#c39b74;--foot:#dab88e;--pore:#472e1b}
+.abasvg.s3{--shell:#9a6349;--shell2:#bd8a63;--foot:#d2ab7e;--pore:#38220f}
+.abasvg.s4{--shell:#7d5136;--shell2:#b07f47;--foot:#c9a173;--pore:#2a180a}
 .stagechip{position:absolute;top:8px;left:8px;background:rgba(8,52,74,.8);color:#fff;font-size:11px;font-weight:700;
   padding:3px 9px;border-radius:99px}
 .countchip{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.85);color:var(--ink);
@@ -189,6 +196,44 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
 </style>
 </head>
 <body>
+<!-- Shared abalone artwork: ear-shaped shell, breathing pores, growth ridges, foot fringe -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="abaShape">
+      <!-- tentacles -->
+      <path d="M9 20 Q4 15 2 11" fill="none" stroke="var(--foot)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M9 31 Q4 36 2 40" fill="none" stroke="var(--foot)" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="2" cy="10.5" r="1.3" fill="var(--foot)"/>
+      <circle cx="2" cy="40.5" r="1.3" fill="var(--foot)"/>
+      <!-- muscular foot fringe -->
+      <path d="M32 6 C15 6 5 14 4 25 C3 36 15 45 32 45 C49 45 61 37 60 25 C59 13 49 6 32 6 Z" fill="var(--foot)"/>
+      <path d="M32 8 C17 8 7 15 6 25 C5 34 16 43 32 43 C48 43 59 35 58 25 C57 14 47 8 32 8 Z" fill="rgba(0,0,0,.10)"/>
+      <!-- shell (ear-shaped, apex to the right rear) -->
+      <path d="M7 25 C7 12 21 5 35 6.5 C51 8 59 16 58.5 26 C58 36 47 42 33 42 C18 42 7 37 7 25 Z" fill="var(--shell)" stroke="rgba(255,236,205,.55)" stroke-width="1.4"/>
+      <!-- lighter anterior sweep -->
+      <path d="M7 25 C7 12 21 5 35 6.5 C42 7.2 48 9.5 52.5 13 C42 9.5 28 10 18 16 C11 20 8 24 8.5 30 C7.5 28 7 26.6 7 25 Z" fill="var(--shell2)"/>
+      <!-- growth ridges radiating from the apex -->
+      <path d="M52 33 C44 20 32 12 16 12" fill="none" stroke="rgba(35,18,8,.30)" stroke-width="1.6"/>
+      <path d="M51.5 34.5 C42 25 30 18.5 13 20" fill="none" stroke="rgba(35,18,8,.24)" stroke-width="1.4"/>
+      <path d="M50 36.5 C42 30.5 30 26 15 28.5" fill="none" stroke="rgba(35,18,8,.18)" stroke-width="1.2"/>
+      <!-- nacre gleam along the lip -->
+      <path d="M10 31 C15 38 25 41.5 34 41.5 C26 43.5 14 40 9.5 33 Z" fill="rgba(210,240,250,.5)"/>
+      <path d="M12 15 C18 10 27 8 34 8.5 C26 7 17 9.5 11.5 14.5 Z" fill="rgba(255,255,255,.35)"/>
+      <!-- respiratory pores along the left arc -->
+      <circle cx="13.5" cy="24" r="2.3" fill="var(--pore)"/>
+      <circle cx="16.5" cy="18.5" r="2.1" fill="var(--pore)"/>
+      <circle cx="21.5" cy="14.4" r="1.9" fill="var(--pore)"/>
+      <circle cx="28" cy="11.8" r="1.7" fill="var(--pore)"/>
+      <circle cx="35" cy="10.6" r="1.4" fill="var(--pore)"/>
+      <circle cx="13" cy="23.4" r="0.8" fill="rgba(255,255,255,.55)"/>
+      <circle cx="16" cy="17.9" r="0.7" fill="rgba(255,255,255,.5)"/>
+      <circle cx="21" cy="13.9" r="0.6" fill="rgba(255,255,255,.45)"/>
+      <!-- apex whorl -->
+      <circle cx="51" cy="30" r="3.4" fill="rgba(35,18,8,.28)"/>
+      <circle cx="51.8" cy="29.4" r="1.6" fill="rgba(255,235,200,.4)"/>
+    </g>
+  </defs>
+</svg>
 <div id="app">
 
   <header>
@@ -196,6 +241,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
       <div class="brand">🦪 <span>ABAGOLD FARM<small>HERMANUS · SOUTH AFRICA</small></span></div>
       <div class="pill" id="moneyPill">💰 <span id="money">R0</span></div>
       <div class="pill gold">🫧 <span id="pearls">0</span></div>
+      <button class="iconbtn" id="musicBtn" title="Music">🎵</button>
       <button class="iconbtn" id="soundBtn" title="Sound">🔊</button>
     </div>
     <div class="xpwrap">
@@ -276,6 +322,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
       </div>
       <div class="panel">
         <h3>⚙️ Settings</h3>
+        <div class="invrow"><span>Background music</span><button class="smallbtn" id="musicBtn2">Toggle</button></div>
         <div class="invrow"><span>Sound effects</span><button class="smallbtn" id="soundBtn2">Toggle</button></div>
         <div class="invrow"><span>Reset game</span><button class="smallbtn" style="background:linear-gradient(180deg,#f1958b,#c0392b)" id="resetBtn">Reset</button></div>
         <p style="font-size:11px;color:var(--muted);margin-top:10px">
@@ -389,7 +436,7 @@ function freshState(){
     streak:0, lastDay:'',
     stats:{feeds:0,cleans:0,fixes:0,harvested:0,jumbos:0,cans:0,earned:0},
     event:null,                     // {type, remain}
-    last:Date.now(), sound:true, started:Date.now(),
+    last:Date.now(), sound:true, music:true, started:Date.now(),
   };
 }
 function save(){ S.last = Date.now(); try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
@@ -432,6 +479,91 @@ function blip(freq,dur,type){
 const sfx={tap:()=>blip(520,.09,'triangle'), coin:()=>{blip(880,.09);setTimeout(()=>blip(1320,.12),70)},
   good:()=>{blip(660,.1);setTimeout(()=>blip(990,.14),90)}, bad:()=>blip(160,.25,'sawtooth'),
   levelup:()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>blip(f,.14),i*110))}};
+
+/* ---------------- ambient ocean music (procedural, no audio files) ---------------- */
+const MUSIC={started:false, master:null, timer:null, chord:0};
+const MUSIC_VOL=0.14;
+const CHORDS=[            // Cmaj9 · Am11 · Fmaj9 · Gsus — slow coastal drift
+  [130.81,196.00,246.94,329.63,392.00],
+  [110.00,164.81,220.00,261.63,392.00],
+  [ 87.31,174.61,220.00,261.63,329.63],
+  [ 98.00,146.83,196.00,293.66,392.00],
+];
+const PENTA=[523.25,587.33,659.26,783.99,880.00,1046.5];
+function startMusic(){
+  if(MUSIC.started || !S || !S.music) return;
+  let ac;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    ac=AC;
+  }catch(e){ return; }
+  MUSIC.started=true;
+  const master=ac.createGain();
+  master.gain.setValueAtTime(0.0001,ac.currentTime);
+  master.gain.linearRampToValueAtTime(MUSIC_VOL,ac.currentTime+5);
+  master.connect(ac.destination);
+  MUSIC.master=master;
+  // breaking waves: looped noise, lowpass, slow swell LFO
+  const len=ac.sampleRate*4, buf=ac.createBuffer(1,len,ac.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  const noise=ac.createBufferSource(); noise.buffer=buf; noise.loop=true;
+  const nf=ac.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=380; nf.Q.value=0.5;
+  const ng=ac.createGain(); ng.gain.value=0.22;
+  const lfo=ac.createOscillator(); lfo.frequency.value=1/9;
+  const lfoG=ac.createGain(); lfoG.gain.value=0.15;
+  lfo.connect(lfoG); lfoG.connect(ng.gain);
+  noise.connect(nf); nf.connect(ng); ng.connect(master);
+  noise.start(); lfo.start();
+  musicBar();
+  MUSIC.timer=setInterval(musicBar,8000);
+}
+function musicBar(){
+  if(!MUSIC.started || !S.music || !AC) return;
+  const ac=AC, t=ac.currentTime+0.05, bar=8;
+  const chord=CHORDS[MUSIC.chord%CHORDS.length]; MUSIC.chord++;
+  // soft pad: two detuned voices per note, slow swell
+  chord.forEach((f,i)=>{
+    [-3,3].forEach(det=>{
+      const o=ac.createOscillator(); o.type=i<2?'sine':'triangle';
+      o.frequency.value=f; o.detune.value=det;
+      const fl=ac.createBiquadFilter(); fl.type='lowpass'; fl.frequency.value=750;
+      const g=ac.createGain();
+      const peak=0.05/(1+i*0.55);
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.linearRampToValueAtTime(peak,t+2.6);
+      g.gain.setValueAtTime(peak,t+bar-2.5);
+      g.gain.linearRampToValueAtTime(0.0001,t+bar+0.4);
+      o.connect(fl); fl.connect(g); g.connect(MUSIC.master);
+      o.start(t); o.stop(t+bar+0.6);
+    });
+  });
+  // sparse kalimba-like melody
+  if(Math.random()<0.75){
+    const n=1+Math.floor(Math.random()*3);
+    for(let k=0;k<n;k++){
+      const nt=t+1+Math.random()*(bar-2.5);
+      const f=PENTA[Math.floor(Math.random()*PENTA.length)];
+      const o=ac.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g=ac.createGain();
+      g.gain.setValueAtTime(0.0001,nt);
+      g.gain.linearRampToValueAtTime(0.055,nt+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,nt+1.4);
+      o.connect(g); g.connect(MUSIC.master);
+      o.start(nt); o.stop(nt+1.5);
+    }
+  }
+}
+function setMusic(on){
+  S.music=on;
+  if(on){
+    if(!MUSIC.started) startMusic();
+    else if(MUSIC.master&&AC) MUSIC.master.gain.linearRampToValueAtTime(MUSIC_VOL,AC.currentTime+1.5);
+  }else if(MUSIC.master&&AC){
+    MUSIC.master.gain.linearRampToValueAtTime(0.0001,AC.currentTime+0.8);
+  }
+  renderHeader();
+}
 
 /* ---------------- XP / levels ---------------- */
 function xpNeed(l){ return 80 + (l-1)*110; }
@@ -710,6 +842,7 @@ function renderHeader(){
   $('#xpfill').style.width=Math.min(100,100*S.xp/xpNeed(S.level))+'%';
   $('#streak').textContent='🔥'+S.streak;
   $('#soundBtn').textContent=S.sound?'🔊':'🔇';
+  const mb=$('#musicBtn'); mb.textContent='🎵'; mb.style.opacity=S.music?'1':'0.4';
 }
 
 function tankHTML(tk,i){
@@ -719,8 +852,9 @@ function tankHTML(tk,i){
   const nShow=Math.min(14, Math.max(3,Math.round(tk.count/10)));
   let abas='';
   if(!empty){
-    const size=[13,15,18,22,26][tk.stage];
-    for(let k=0;k<nShow;k++) abas+='<span class="aba" style="font-size:'+size+'px">'+st.icon+'</span>';
+    const w=[15,19,24,29,35][tk.stage];
+    for(let k=0;k<nShow;k++)
+      abas+='<svg class="aba abasvg s'+tk.stage+'" style="width:'+w+'px;height:'+Math.round(w*0.75)+'px" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
   }
   let bubbles='';
   if(!tk.broken && !empty)
@@ -890,6 +1024,7 @@ document.addEventListener('click',e=>{
   }
   if(b.id==='buyTank'){ doBuyTank(); return; }
   if(b.id==='soundBtn'||b.id==='soundBtn2'){ S.sound=!S.sound; renderHeader(); toast(S.sound?'🔊 Sound on':'🔇 Sound off'); return; }
+  if(b.id==='musicBtn'||b.id==='musicBtn2'){ setMusic(!S.music); toast(S.music?'🎵 Music on':'🎵 Music off'); return; }
   if(b.id==='resetBtn'){
     if(confirm('Really reset your whole farm? This cannot be undone.')){
       localStorage.removeItem(SAVE_KEY); S=freshState(); activeTab='farm';
@@ -917,6 +1052,8 @@ function tick(){
 setInterval(tick,1000);
 setInterval(save,10000);
 document.addEventListener('visibilitychange',()=>{ if(document.hidden) save(); else lastTick=Date.now(); });
+/* browsers only allow audio after a user gesture — start the ocean on first tap */
+document.addEventListener('pointerdown',()=>startMusic(),{passive:true});
 window.addEventListener('pagehide',save);
 
 /* ---------------- boot ---------------- */

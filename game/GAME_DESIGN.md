@@ -60,6 +60,13 @@ Sources consulted:
   works on GitHub Pages, loads instantly on mobile data.
 - PWA: `manifest.webmanifest` + `sw.js` → installable to the home screen and
   playable offline, portrait-locked, standalone (no browser chrome).
+- Abalone are drawn as a hand-crafted SVG (ear-shaped shell, respiratory pores,
+  growth ridges, mother-of-pearl lip, foot fringe) with a colour palette per
+  growth stage — spat are pale, jumbos dark and golden.
+- Ambient background music is generated procedurally with WebAudio (slow chord
+  pads, wave-wash noise, sparse kalimba melody) — no audio files, nothing to
+  license, and it starts on the first tap (browser autoplay rules). Separate
+  toggles for music and sound effects.
 - Save game in `localStorage`, autosaved every 10s and on tab hide.
 - Time-based simulation with timestamp catch-up → honest offline progress.
 - Simple WebAudio synth for taps/coins/fanfares (mutable).
