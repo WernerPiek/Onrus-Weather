@@ -73,14 +73,18 @@ h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing
 .bubble{position:absolute;bottom:-10px;border-radius:50%;background:rgba(255,255,255,.5);animation:rise linear infinite}
 @keyframes rise{from{transform:translateY(0);opacity:.7}to{transform:translateY(-130px);opacity:0}}
 .abas{position:absolute;inset:0}
-.abas svg.aba{position:absolute;width:var(--abaW,20px);aspect-ratio:64/48;height:auto;
+.abas svg.aba,.zwater svg.aba{position:absolute;width:var(--abaW,20px);aspect-ratio:64/48;height:auto;
   transition:width 1.2s linear;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
 .aba:nth-child(2n){transform:scaleX(-1)}
-/* wiggle animates rotate only; drift animates translate — they compose */
-@keyframes wiggle{0%,100%{rotate:-4deg}50%{rotate:5deg}}
-@keyframes driftA{0%,100%{translate:0 0}25%{translate:26px -10px}50%{translate:10px -22px}75%{translate:-18px -7px}}
-@keyframes driftB{0%,100%{translate:0 0}30%{translate:-22px 9px}55%{translate:-30px -12px}80%{translate:12px -16px}}
-@keyframes driftC{0%,100%{translate:0 0}20%{translate:14px 14px}45%{translate:30px 2px}70%{translate:6px -14px}}
+/* wiggle animates rotate only; crawl animates translate — they compose.
+   Abalone crawl: slow steady glides with grazing pauses (plateaus), run linear. */
+@keyframes wiggle{0%,100%{rotate:-3deg}50%{rotate:3deg}}
+@keyframes crawlA{0%{translate:0 0}16%{translate:15px 5px}26%{translate:15px 5px}
+  48%{translate:27px -7px}58%{translate:27px -7px}82%{translate:-7px -11px}90%{translate:-7px -11px}100%{translate:0 0}}
+@keyframes crawlB{0%{translate:0 0}20%{translate:-16px 8px}30%{translate:-16px 8px}
+  52%{translate:-27px -9px}62%{translate:-27px -9px}84%{translate:9px -13px}92%{translate:9px -13px}100%{translate:0 0}}
+@keyframes crawlC{0%{translate:0 0}14%{translate:11px 12px}26%{translate:11px 12px}
+  50%{translate:25px 2px}60%{translate:25px 2px}80%{translate:5px -11px}90%{translate:5px -11px}100%{translate:0 0}}
 /* stage palettes for the abalone artwork (spat → jumbo) */
 .abasvg.s0{--shell:#dcc4b2;--shell2:#eadbc9;--foot:#e9d2ba;--pore:#8a6a55}
 .abasvg.s1{--shell:#a89a68;--shell2:#c2b585;--foot:#dcc09b;--pore:#4d4227}
@@ -192,6 +196,42 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
 .modal button.close{width:100%;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:800;
   color:#fff;background:linear-gradient(180deg,#34b56f,#238b52);cursor:pointer}
 .rewardline{font-size:15px;font-weight:800;color:var(--gold-d);margin-bottom:14px}
+#nameInput{width:100%;padding:13px;border:2px solid #cfe3ee;border-radius:12px;font-size:16px;
+  margin-bottom:14px;text-align:center;font-weight:800;color:var(--ink);outline:none}
+#nameInput:focus{border-color:var(--sea)}
+.pickrow{width:100%;display:flex;align-items:center;gap:10px;border:2px solid #e3edf2;background:#f7fbfd;
+  border-radius:14px;padding:13px 14px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer;
+  margin-bottom:10px;text-align:left}
+.pickrow span{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted)}
+.pickrow.new{border-style:dashed;color:var(--sea);justify-content:center}
+.cancellink{background:none;border:0;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
+  margin-top:10px;text-decoration:underline}
+
+/* ---------- full-screen tank inspection ---------- */
+.tank .water{cursor:zoom-in}
+#zoomWrap{position:fixed;inset:0;z-index:55;max-width:480px;margin:0 auto;display:flex;flex-direction:column;
+  background:#08344a;animation:zoomin .22s ease-out}
+@keyframes zoomin{from{transform:scale(.94);opacity:0}}
+.zhead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;color:#fff}
+.zhead b{font-size:15px}
+.zhead .sub{font-size:11px;opacity:.75;display:block;font-weight:600}
+.zhead .iconbtn{margin-left:auto}
+.zwater{flex:1;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#9fd9f0 0%,#5db6dd 55%,#2f8fbe 100%)}
+#zoomWrap.dirty1 .zwater{background:linear-gradient(180deg,#a5d3d6 0%,#6fb3b0 55%,#488a92 100%)}
+#zoomWrap.dirty2 .zwater{background:linear-gradient(180deg,#a9c9b8 0%,#7ba68f 55%,#597f6c 100%)}
+.zwater svg.aba{cursor:pointer}
+.zwater .pumpwarn{bottom:auto;top:14px;right:14px;font-size:13px;padding:8px 14px}
+.zhint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(8,52,74,.65);color:#dff3fd;
+  font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;pointer-events:none}
+.zcard{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,255,255,.97);border-radius:16px;
+  padding:13px 15px;font-size:13px;color:var(--ink);box-shadow:0 10px 26px rgba(0,15,25,.45);
+  animation:pop .25s cubic-bezier(.34,1.4,.64,1)}
+.zcard b{font-size:14px}
+.zcard .zrow{display:flex;gap:14px;margin:7px 0;font-weight:700;color:var(--sea)}
+.zcard .cond{font-weight:700}
+.zcard .flav{font-size:12px;color:var(--muted);font-style:italic;margin-top:5px}
+.zpanel{background:var(--card);border-radius:20px 20px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom))}
 .hidden{display:none!important}
 .floaty{position:fixed;z-index:65;font-weight:900;font-size:15px;pointer-events:none;color:#ffe9a8;
   text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatup 1.1s ease-out forwards}
@@ -241,7 +281,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
 
   <header>
     <div class="hrow">
-      <div class="brand">🦪 <span>ABAGOLD FARM<small>HERMANUS · SOUTH AFRICA</small></span></div>
+      <div class="brand">🦪 <span>ABAGOLD FARM<small id="pname">HERMANUS · SOUTH AFRICA</small></span></div>
       <div class="pill" id="moneyPill">💰 <span id="money">R0</span></div>
       <div class="pill gold">🫧 <span id="pearls">0</span></div>
       <button class="iconbtn" id="musicBtn" title="Music">🎵</button>
@@ -325,6 +365,8 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
       </div>
       <div class="panel">
         <h3>⚙️ Settings</h3>
+        <div class="invrow"><span>Farmer name</span><button class="smallbtn" id="renameBtn">Rename</button></div>
+        <div class="invrow"><span>Switch farmer</span><button class="smallbtn green" id="switchBtn">Switch</button></div>
         <div class="invrow"><span>Background music</span><button class="smallbtn" id="musicBtn2">Toggle</button></div>
         <div class="invrow"><span>Sound effects</span><button class="smallbtn" id="soundBtn2">Toggle</button></div>
         <div class="invrow"><span>Reset game</span><button class="smallbtn" style="background:linear-gradient(180deg,#f1958b,#c0392b)" id="resetBtn">Reset</button></div>
@@ -342,6 +384,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
     <button data-tab="more"><span class="nic">🏆</span>More</button>
   </nav>
 
+  <div id="zoomRoot"></div>
   <div id="toasts"></div>
   <div id="modalRoot"></div>
 </div>
@@ -439,13 +482,30 @@ function freshState(){
     streak:0, lastDay:'',
     stats:{feeds:0,cleans:0,fixes:0,harvested:0,jumbos:0,cans:0,earned:0},
     event:null,                     // {type, remain}
+    name:'Farmer',
     last:Date.now(), sound:true, music:true, started:Date.now(),
   };
 }
-function save(){ S.last = Date.now(); try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
-function load(){
+/* ---- local player profiles: each farmer has their own save slot ---- */
+const PROFILES_KEY='abagoldFarm.profiles', LAST_KEY='abagoldFarm.lastProfile';
+let profileId=null;
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function loadProfiles(){ try{ return JSON.parse(localStorage.getItem(PROFILES_KEY))||[]; }catch(e){ return []; } }
+function saveProfiles(ps){ try{ localStorage.setItem(PROFILES_KEY, JSON.stringify(ps)); }catch(e){} }
+function saveSlot(id){ return 'abagoldFarm.save.'+id; }
+function newProfileId(){ return 'p'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36); }
+function save(){
+  if(!S || !profileId) return;
+  S.last = Date.now();
   try{
-    const raw = localStorage.getItem(SAVE_KEY);
+    localStorage.setItem(saveSlot(profileId), JSON.stringify(S));
+    const ps=loadProfiles(), p=ps.find(x=>x.id===profileId);
+    if(p){ p.name=S.name; p.level=S.level; p.money=Math.floor(S.money); p.last=Date.now(); saveProfiles(ps); }
+  }catch(e){}
+}
+function load(id){
+  try{
+    const raw = localStorage.getItem(saveSlot(id));
     if(raw){ const d = JSON.parse(raw); if(d && d.tanks) return Object.assign(freshState(), d); }
   }catch(e){}
   return null;
@@ -678,7 +738,8 @@ function setTicker(){
     el.className='event'; el.textContent='📦 EXPORT ORDER ACTIVE — prices +60%! Sell your cans! ('+Math.ceil(S.event.remain)+'s)';
   }else{
     el.className='';
-    const tips=['Tip: Jumbo abalone are worth 6× more than Medium — patience pays! 🦪',
+    const tips=['Tip: Tap a tank\'s water to zoom in and inspect your abalone! 🔍',
+      'Tip: Jumbo abalone are worth 6× more than Medium — patience pays! 🦪',
       'Tip: Canning multiplies your profit. Fresh sales are for quick cash. 🥫',
       'Tip: Hungry abalone grow slowly. Keep feed above 40%. 🌿',
       'Tip: Watch the market index and sell when it\'s green. 📈',
@@ -835,6 +896,180 @@ function presentModal(){
   $('#modalRoot').appendChild(back);
 }
 
+/* ---------------- profile screens (own overlays, outside the modal queue) ---------------- */
+function showNameModal(title, sub, initial, cb, allowCancel){
+  const back=document.createElement('div'); back.className='modalback';
+  back.innerHTML='<div class="modal"><div class="big">🧑‍🌾</div><h3>'+title+'</h3>'+
+    '<p>'+sub+'</p>'+
+    '<input id="nameInput" maxlength="14" autocomplete="off" placeholder="e.g. Skipper" value="'+esc(initial||'')+'">'+
+    '<button class="close">Let\'s farm! 🦪</button>'+
+    (allowCancel?'<button class="cancellink">Cancel</button>':'')+
+    '</div>';
+  const inp=back.querySelector('#nameInput');
+  const done=()=>{
+    const v=inp.value.trim().slice(0,14);
+    if(v.length<2){ inp.style.borderColor='var(--bad)'; inp.placeholder='At least 2 characters!'; return; }
+    back.remove(); cb(v);
+  };
+  back.querySelector('.close').onclick=done;
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done(); });
+  if(allowCancel) back.querySelector('.cancellink').onclick=()=>back.remove();
+  document.body.appendChild(back);
+  setTimeout(()=>inp.focus(),150);
+}
+function showPicker(allowCancel){
+  const ps=loadProfiles().sort((a,b)=>(b.last||0)-(a.last||0));
+  const back=document.createElement('div'); back.className='modalback';
+  back.innerHTML='<div class="modal"><div class="big">🌊</div><h3>Who\'s farming?</h3>'+
+    '<p>Every farmer gets their own farm, money and progress on this device.</p>'+
+    ps.map(p=>'<button class="pickrow" data-pid="'+p.id+'">🧑‍🌾 '+esc(p.name)+
+      '<span>Lv '+(p.level||1)+' · '+fmtR(p.money||0)+'</span></button>').join('')+
+    '<button class="pickrow new">➕ New farmer</button>'+
+    (allowCancel?'<button class="cancellink">Cancel</button>':'')+
+    '</div>';
+  back.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.pid){ back.remove(); enterGame(b.dataset.pid); }
+    else if(b.classList.contains('new')){ back.remove(); createFarmerFlow(true); }
+    else if(b.classList.contains('cancellink')){ back.remove(); }
+  });
+  document.body.appendChild(back);
+}
+function createFarmerFlow(fromPicker){
+  showNameModal('New farmer','Choose a screen name — each farmer runs their own abalone farm on this device.','',
+    v=>{
+      const ps=loadProfiles(), id=newProfileId();
+      ps.push({id, name:v, level:1, money:500, last:Date.now()}); saveProfiles(ps);
+      enterGame(id);
+    }, fromPicker && loadProfiles().length>0);
+}
+function enterGame(id){
+  profileId=id;
+  try{ localStorage.setItem(LAST_KEY,id); }catch(e){}
+  document.querySelectorAll('.modalback').forEach(m=>m.remove());
+  closeZoom();
+  farmSigLast=''; modalQueue.length=0; lastTick=Date.now();
+  const loaded=load(id);
+  if(loaded){ S=loaded; offlineCatchup(); }
+  else{
+    S=freshState();
+    const p=loadProfiles().find(x=>x.id===id); if(p) S.name=p.name;
+    showModal('🦪','Welcome, '+esc(S.name)+'!',
+      '<p>You\'ve inherited a small abalone farm on the shores of <b>Walker Bay, Hermanus</b>. '+
+      'Feed your abalone kelp, keep the seawater clean, fix the pumps — and grow tiny spat into '+
+      'jumbo perlemoen worth a fortune on the export market!</p>'+
+      '<div class="fact">💡 <b>Did you know?</b><br>'+FACTS[0]+'</div>',
+      'Start farming!');
+  }
+  checkStreak(); renderAll(); save();
+}
+
+/* ---------------- full-screen tank inspection ---------------- */
+let zoomOpen=false, zoomTank=0, zoomSig='', zcardTimer=null;
+function zoomTankSig(tk){
+  return [tk.tier,tk.count,tk.stage,tk.broken?'b'+tk.fixTaps:'-',tk.feed>95?1:0,tk.clean>95?1:0].join(',');
+}
+function openZoom(i){ zoomOpen=true; zoomTank=i; zoomSig=''; renderZoom(); sfx.tap(); }
+function closeZoom(){ zoomOpen=false; $('#zoomRoot').innerHTML=''; if(zcardTimer){clearTimeout(zcardTimer);zcardTimer=null;} }
+function buildZoom(){
+  const i=zoomTank, tk=S.tanks[i]; if(!tk){ closeZoom(); return; }
+  const st=STAGES[tk.stage], empty=tk.count<=0;
+  const dirty=tk.clean<25?'dirty2':tk.clean<55?'dirty1':'';
+  let abas='';
+  if(!empty){
+    const nShowZ=Math.min(26, Math.max(4, Math.round(tk.count/4)));
+    const nowS=Date.now()/1000;
+    for(let k=0;k<nShowZ;k++){
+      const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
+      const left=(4+r1*74).toFixed(1), top=(8+r2*66).toFixed(1);
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
+      abas+='<svg class="aba abasvg s'+tk.stage+'" data-k="'+k+'" style="left:'+left+'%;top:'+top+'%;'+
+        'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+    }
+  }
+  let bubbles='';
+  if(!tk.broken && !empty)
+    for(let k=0;k<8;k++)
+      bubbles+='<span class="bubble" style="left:'+(5+k*12)+'%;width:'+(5+k%3*4)+'px;height:'+(5+k%3*4)+'px;animation-duration:'+(3+k*0.6)+'s;animation-delay:'+(k*0.4)+'s"></span>';
+  const grade=st.grade;
+  let mainBtn;
+  if(empty) mainBtn='<button class="act stock" data-a="stock" data-i="'+i+'">🫧 Stock spat · '+fmtR(TANK_DEFS[tk.tier].batch*SPAT_COST_EACH)+'</button>';
+  else if(grade>=0) mainBtn='<button class="act harvest" data-a="harvest" data-i="'+i+'">🧺 Harvest '+GRADES[grade].name.split(' ')[0]+'</button>';
+  else mainBtn='<button class="act boost" data-a="boost" data-i="'+i+'">✨ Boost · 3🫧</button>';
+  const growPct=st.dur?Math.floor(tk.prog*100):100;
+  const nextName=st.dur?STAGES[tk.stage+1].name:'Fully grown';
+  $('#zoomRoot').innerHTML=
+  '<div id="zoomWrap" class="'+dirty+'">'+
+    '<div class="zhead">🦪 <span><b>Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</b>'+
+      '<span class="sub">'+(empty?'Stock new spat from the hatchery':tk.count+' abalone · tap one to inspect')+'</span></span>'+
+      '<button class="iconbtn" id="zoomClose">✕</button></div>'+
+    '<div class="zwater" id="zwater" style="--abaW:'+(abaWidth(tk)*2.4)+'px">'+
+      '<div class="waterline"></div>'+bubbles+abas+
+      (empty?'<div class="zhint" style="top:45%">Tank empty — stock new spat below!</div>':'<div class="zhint">🔍 Tap an abalone to inspect it</div>')+
+      (tk.broken?'<button class="pumpwarn" data-a="fix" data-i="'+i+'">🔧 PUMP DOWN! TAP '+(S.ups.pumps>=3?1:3-tk.fixTaps)+'×</button>':'')+
+      '<div id="zcard" class="zcard hidden"></div>'+
+    '</div>'+
+    '<div class="zpanel">'+
+      (empty?'':'<div class="meters">'+
+        '<div class="meter"><label>🌿 Feed <span id="zfeedL">'+Math.floor(tk.feed)+'%</span></label><div class="bar"><i id="zfeedI" class="'+barClass(tk.feed)+'" style="width:'+tk.feed+'%"></i></div></div>'+
+        '<div class="meter"><label>💧 Water <span id="zcleanL">'+Math.floor(tk.clean)+'%</span></label><div class="bar"><i id="zcleanI" class="'+barClass(tk.clean)+'" style="width:'+tk.clean+'%"></i></div></div>'+
+      '</div>'+
+      '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="zgrowI" style="width:'+growPct+'%"></i></div><span id="zgrowL">'+growPct+'%</span></div>')+
+      '<div class="btnrow">'+
+        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
+        '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
+        mainBtn+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function renderZoom(){
+  const tk=S.tanks[zoomTank]; if(!tk){ closeZoom(); return; }
+  const sig=zoomTankSig(tk);
+  if(sig!==zoomSig){ zoomSig=sig; buildZoom(); return; }
+  const set=(id,fn)=>{const el=document.getElementById(id); if(el) fn(el);};
+  const w=document.getElementById('zoomWrap');
+  if(w){ const d=tk.clean<25?'dirty2':tk.clean<55?'dirty1':''; if(w.className!==d) w.className=d; }
+  if(tk.count<=0) return;
+  set('zfeedL', el=>el.textContent=Math.floor(tk.feed)+'%');
+  set('zfeedI', el=>{el.style.width=tk.feed+'%'; el.className=barClass(tk.feed);});
+  set('zcleanL',el=>el.textContent=Math.floor(tk.clean)+'%');
+  set('zcleanI',el=>{el.style.width=tk.clean+'%'; el.className=barClass(tk.clean);});
+  const pct=STAGES[tk.stage].dur?Math.floor(tk.prog*100):100;
+  set('zgrowI', el=>el.style.width=pct+'%');
+  set('zgrowL', el=>el.textContent=pct+'%');
+  set('zwater', el=>el.style.setProperty('--abaW',(abaWidth(tk)*2.4)+'px'));
+}
+const ABA_MM=[[6,20],[20,45],[45,70],[70,95],[95,125]];
+const ABA_FLAVOR=['Holding on tight with its strong foot.','Its shell shimmers with mother-of-pearl.',
+  'It has been grazing kelp all morning.','Breathing through the pore row in its shell.',
+  'A future export-grade beauty.','It likes this corner of the tank.'];
+function showInspect(k){
+  const tk=S.tanks[zoomTank]; if(!tk||tk.count<=0) return;
+  const st=STAGES[tk.stage];
+  const [a,b]=ABA_MM[tk.stage];
+  const jit=0.9+0.2*rnd(zoomTank*211+k*17);
+  const len=Math.round((a+(b-a)*(st.dur?clamp(tk.prog,0,1):0.65))*jit);
+  const wgt=Math.max(1,Math.round(0.00025*len*len*len));
+  let cond;
+  if(tk.broken) cond='⚠️ No fresh seawater — fix the pump!';
+  else if(tk.feed<40) cond='🌿 Hungry — drop some kelp!';
+  else if(tk.clean<35) cond='🧽 The water is murky — time to clean.';
+  else cond='😊 Happy, healthy and grazing.';
+  const flav=ABA_FLAVOR[Math.floor(rnd(k*31+tk.stage*7)*ABA_FLAVOR.length)%ABA_FLAVOR.length];
+  const card=document.getElementById('zcard'); if(!card) return;
+  card.innerHTML='<b>🦪 '+st.name+' abalone #'+(k+1)+'</b>'+
+    '<div class="zrow"><span>📏 '+(len>=10?(len/10).toFixed(1)+' cm':len+' mm')+' shell</span><span>⚖️ ±'+(wgt>=1000?(wgt/1000).toFixed(1)+' kg':wgt+' g')+'</span></div>'+
+    '<div class="cond">'+cond+'</div><div class="flav">'+flav+'</div>';
+  card.classList.remove('hidden');
+  sfx.tap();
+  if(zcardTimer) clearTimeout(zcardTimer);
+  zcardTimer=setTimeout(()=>card.classList.add('hidden'),6000);
+}
+
 /* ---------------- rendering ---------------- */
 function barClass(v){ return v>55?'ok':v>25?'mid':'low'; }
 function rnd(seed){ const x=Math.sin(seed*127.1+311.7)*43758.5453; return x-Math.floor(x); }
@@ -854,6 +1089,7 @@ function renderHeader(){
   $('#streak').textContent='🔥'+S.streak;
   $('#soundBtn').textContent=S.sound?'🔊':'🔇';
   const mb=$('#musicBtn'); mb.textContent='🎵'; mb.style.opacity=S.music?'1':'0.4';
+  $('#pname').textContent='🧑‍🌾 '+(S.name||'FARMER').toUpperCase()+' · HERMANUS';
 }
 
 function tankHTML(tk,i){
@@ -867,13 +1103,13 @@ function tankHTML(tk,i){
     for(let k=0;k<nShow;k++){
       const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
       const left=(4+r1*72).toFixed(1), top=(10+r2*52).toFixed(1);
-      const drift=['driftA','driftB','driftC'][k%3];
-      const dDur=20+r3*16, wDur=2.6+r1*1.6;
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;   // crawling pace: 45-70s per circuit
       // phase from wall-clock so rebuilds never make them jump
-      const dDel=(-((nowS+r4*40)%dDur)).toFixed(2), wDel=(-((nowS+r2*5)%wDur)).toFixed(2);
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
       abas+='<svg class="aba abasvg s'+tk.stage+'" style="left:'+left+'%;top:'+top+'%;'+
         'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
-        drift+' '+dDur.toFixed(1)+'s ease-in-out '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
     }
   }
   let bubbles='';
@@ -892,7 +1128,7 @@ function tankHTML(tk,i){
   const growPct = st.dur? Math.floor(tk.prog*100) : 100;
   const nextName = st.dur? STAGES[tk.stage+1].name : 'Fully grown';
   return '<div class="tank '+dirty+'" id="tank'+i+'">'+
-    '<div class="water"><div class="waterline"></div>'+bubbles+
+    '<div class="water" data-zoom="'+i+'"><div class="waterline"></div>'+bubbles+
       '<div class="abas" id="t'+i+'abas" style="--abaW:'+abaWidth(tk)+'px">'+
         (empty?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#eaf7ff;font-weight:700">Tank empty — stock new spat!</span>':abas)+'</div>'+
       '<span class="stagechip">Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</span>'+
@@ -1020,6 +1256,7 @@ function renderAll(){
   else if(activeTab==='upgrades') renderUpgrades();
   else renderMore();
   renderBadges();
+  if(zoomOpen) renderZoom();
   mktPrev=marketMult();
 }
 
@@ -1036,7 +1273,7 @@ function offlineCatchup(){
   }
   const h=Math.floor(dt/3600), m=Math.floor((dt%3600)/60);
   const away=(h?h+'h ':'')+m+'m';
-  showModal('🌅','Welcome back, farmer!',
+  showModal('🌅','Welcome back, '+esc(S.name)+'!',
     '<p>Your farm kept working while you were away <b>'+away+'</b>:</p>'+
     '<div class="fact">'+
       '📈 Growth stages advanced: <b>'+stages+'</b><br>'+
@@ -1047,7 +1284,18 @@ function offlineCatchup(){
 
 /* ---------------- events wiring ---------------- */
 document.addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b) return;
+  if(!S) return; // profile screens handle their own clicks before a farmer is chosen
+  const b=e.target.closest('button');
+  if(!b){
+    const ab=e.target.closest('#zoomWrap svg.aba');
+    if(ab){ showInspect(+ab.dataset.k); return; }
+    if(e.target.closest('#zcard')){ document.getElementById('zcard').classList.add('hidden'); return; }
+    const w=e.target.closest('.water[data-zoom]');
+    if(w && !zoomOpen) openZoom(+w.dataset.zoom);
+    return;
+  }
+  if(b.id==='zoomClose'){ closeZoom(); return; }
+  if(b.closest('.modalback') && !b.dataset.tab) return; // profile overlays manage themselves
   if(b.dataset.a){
     const i=+b.dataset.i;
     if(b.dataset.a==='feed') doFeed(i,e);
@@ -1071,12 +1319,20 @@ document.addEventListener('click',e=>{
   if(b.id==='buyTank'){ doBuyTank(); return; }
   if(b.id==='soundBtn'||b.id==='soundBtn2'){ S.sound=!S.sound; renderHeader(); toast(S.sound?'🔊 Sound on':'🔇 Sound off'); return; }
   if(b.id==='musicBtn'||b.id==='musicBtn2'){ setMusic(!S.music); toast(S.music?'🎵 Music on':'🎵 Music off'); return; }
+  if(b.id==='renameBtn'){
+    showNameModal('Change your name','Pick a new screen name for this farmer.',S.name,
+      v=>{ S.name=v; save(); renderHeader(); toast('👋 Howzit, '+esc(v)+'!'); }, true);
+    return;
+  }
+  if(b.id==='switchBtn'){ save(); showPicker(true); return; }
   if(b.id==='resetBtn'){
-    if(confirm('Really reset your whole farm? This cannot be undone.')){
-      localStorage.removeItem(SAVE_KEY); S=freshState(); activeTab='farm';
+    if(confirm('Really reset '+S.name+'\'s farm? Other farmers on this device are not affected. This cannot be undone.')){
+      try{ localStorage.removeItem(saveSlot(profileId)); }catch(e){}
+      const keepName=S.name;
+      S=freshState(); S.name=keepName; farmSigLast=''; activeTab='farm';
       document.querySelectorAll('nav button').forEach((n,i)=>n.classList.toggle('active',i===0));
       document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-farm'));
-      renderAll();
+      renderAll(); save();
     }
     return;
   }
@@ -1085,6 +1341,7 @@ document.addEventListener('click',e=>{
 /* ---------------- main loop ---------------- */
 let lastTick=Date.now();
 function tick(){
+  if(!S) return;               // waiting on the profile screens
   const now=Date.now();
   let dt=(now-lastTick)/1000; lastTick=now;
   if(dt>90){ offlineCatchup(); dt=0.5; }
@@ -1104,21 +1361,23 @@ window.addEventListener('pagehide',save);
 
 /* ---------------- boot ---------------- */
 (function boot(){
-  const loaded=load();
-  if(loaded){ S=loaded; offlineCatchup(); }
-  else{
-    S=freshState();
-    showModal('🦪','Welcome to Abagold Farm!',
-      '<p>You\'ve inherited a small abalone farm on the shores of <b>Walker Bay, Hermanus</b>. '+
-      'Feed your abalone kelp, keep the seawater clean, fix the pumps — and grow tiny spat into '+
-      'jumbo perlemoen worth a fortune on the export market!</p>'+
-      '<div class="fact">💡 <b>Did you know?</b><br>'+FACTS[0]+'</div>',
-      'Start farming!');
-  }
-  checkStreak();
-  renderAll();
-  save();
   if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+  const ps=loadProfiles();
+  const legacy=localStorage.getItem(SAVE_KEY);
+  if(!ps.length && legacy){
+    // migrate the pre-profiles save into the first farmer, then let them pick a name
+    const id=newProfileId();
+    saveProfiles([{id, name:'Farmer', level:1, money:500, last:Date.now()}]);
+    try{ localStorage.setItem(saveSlot(id), legacy); localStorage.removeItem(SAVE_KEY); }catch(e){}
+    showNameModal('Name your farmer','Your farm is safe! From now on every player on this device gets their own farm — what\'s your screen name?','',
+      v=>{ const ps2=loadProfiles(); ps2[0].name=v; saveProfiles(ps2);
+           enterGame(id); S.name=v; save(); renderHeader(); });
+    return;
+  }
+  if(!ps.length){ createFarmerFlow(false); return; }
+  const last=localStorage.getItem(LAST_KEY);
+  const p=ps.find(x=>x.id===last);
+  if(p) enterGame(p.id); else showPicker(false);
 })();
 </script>
 </body>
