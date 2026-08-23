@@ -50,7 +50,8 @@ Sources consulted:
 - 16 real facts about abalone farming, Haliotis midae, Hermanus, and Abagold
   unlock as level-up rewards — education delivered as a prize, not a lecture.
 - The "More" tab and end-game fact carry a call-to-action to taste real
-  Abagold abalone (abagold.co.za).
+  Abagold abalone — the CTA links straight to the online shop
+  (abagold-shop-storefront-iota.vercel.app).
 - Canning, export markets, kelp feed, seawater pumps and hatchery spat mirror the
   real land-based farm's operations.
 

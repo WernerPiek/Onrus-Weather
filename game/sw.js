@@ -1,5 +1,5 @@
 /* Abagold Abalone Farm — offline cache */
-const CACHE = 'abagold-farm-v6';
+const CACHE = 'abagold-farm-v7';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
