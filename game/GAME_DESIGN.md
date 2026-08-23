@@ -63,7 +63,8 @@ Sources consulted:
 - Abalone are drawn as a hand-crafted SVG (ear-shaped shell, respiratory pores,
   growth ridges, mother-of-pearl lip, foot fringe) with a colour palette per
   growth stage — spat are pale, jumbos dark and golden.
-- They graze slowly around the tank on individual wander paths (pure CSS
+- They crawl slowly around the tank on individual paths — steady linear glides
+  with grazing pauses, the way real abalone move (pure CSS
   animations with wall-clock phase, so they never jump on re-render) and
   visibly grow in size in real time as stage progress climbs — the tank DOM
   only rebuilds on structural changes, with meters updated in place.

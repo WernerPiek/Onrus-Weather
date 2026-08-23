@@ -76,11 +76,15 @@ h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing
 .abas svg.aba,.zwater svg.aba{position:absolute;width:var(--abaW,20px);aspect-ratio:64/48;height:auto;
   transition:width 1.2s linear;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
 .aba:nth-child(2n){transform:scaleX(-1)}
-/* wiggle animates rotate only; drift animates translate — they compose */
-@keyframes wiggle{0%,100%{rotate:-4deg}50%{rotate:5deg}}
-@keyframes driftA{0%,100%{translate:0 0}25%{translate:26px -10px}50%{translate:10px -22px}75%{translate:-18px -7px}}
-@keyframes driftB{0%,100%{translate:0 0}30%{translate:-22px 9px}55%{translate:-30px -12px}80%{translate:12px -16px}}
-@keyframes driftC{0%,100%{translate:0 0}20%{translate:14px 14px}45%{translate:30px 2px}70%{translate:6px -14px}}
+/* wiggle animates rotate only; crawl animates translate — they compose.
+   Abalone crawl: slow steady glides with grazing pauses (plateaus), run linear. */
+@keyframes wiggle{0%,100%{rotate:-3deg}50%{rotate:3deg}}
+@keyframes crawlA{0%{translate:0 0}16%{translate:15px 5px}26%{translate:15px 5px}
+  48%{translate:27px -7px}58%{translate:27px -7px}82%{translate:-7px -11px}90%{translate:-7px -11px}100%{translate:0 0}}
+@keyframes crawlB{0%{translate:0 0}20%{translate:-16px 8px}30%{translate:-16px 8px}
+  52%{translate:-27px -9px}62%{translate:-27px -9px}84%{translate:9px -13px}92%{translate:9px -13px}100%{translate:0 0}}
+@keyframes crawlC{0%{translate:0 0}14%{translate:11px 12px}26%{translate:11px 12px}
+  50%{translate:25px 2px}60%{translate:25px 2px}80%{translate:5px -11px}90%{translate:5px -11px}100%{translate:0 0}}
 /* stage palettes for the abalone artwork (spat → jumbo) */
 .abasvg.s0{--shell:#dcc4b2;--shell2:#eadbc9;--foot:#e9d2ba;--pore:#8a6a55}
 .abasvg.s1{--shell:#a89a68;--shell2:#c2b585;--foot:#dcc09b;--pore:#4d4227}
@@ -978,12 +982,12 @@ function buildZoom(){
     for(let k=0;k<nShowZ;k++){
       const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
       const left=(4+r1*74).toFixed(1), top=(8+r2*66).toFixed(1);
-      const drift=['driftA','driftB','driftC'][k%3];
-      const dDur=20+r3*16, wDur=2.6+r1*1.6;
-      const dDel=(-((nowS+r4*40)%dDur)).toFixed(2), wDel=(-((nowS+r2*5)%wDur)).toFixed(2);
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
       abas+='<svg class="aba abasvg s'+tk.stage+'" data-k="'+k+'" style="left:'+left+'%;top:'+top+'%;'+
         'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
-        drift+' '+dDur.toFixed(1)+'s ease-in-out '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
     }
   }
   let bubbles='';
@@ -1099,13 +1103,13 @@ function tankHTML(tk,i){
     for(let k=0;k<nShow;k++){
       const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
       const left=(4+r1*72).toFixed(1), top=(10+r2*52).toFixed(1);
-      const drift=['driftA','driftB','driftC'][k%3];
-      const dDur=20+r3*16, wDur=2.6+r1*1.6;
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;   // crawling pace: 45-70s per circuit
       // phase from wall-clock so rebuilds never make them jump
-      const dDel=(-((nowS+r4*40)%dDur)).toFixed(2), wDel=(-((nowS+r2*5)%wDur)).toFixed(2);
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
       abas+='<svg class="aba abasvg s'+tk.stage+'" style="left:'+left+'%;top:'+top+'%;'+
         'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
-        drift+' '+dDur.toFixed(1)+'s ease-in-out '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
     }
   }
   let bubbles='';
