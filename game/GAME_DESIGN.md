@@ -71,6 +71,11 @@ Sources consulted:
   pads, wave-wash noise, sparse kalimba melody) — no audio files, nothing to
   license, and it starts on the first tap (browser autoplay rules). Separate
   toggles for music and sound effects.
+- Local player profiles: every farmer picks a screen name and gets their own
+  save slot, streak and progress on the device ("Who's farming?" picker, with
+  rename and switch in Settings). The last-played farmer resumes automatically;
+  pre-profile saves migrate into the first profile. No server, no passwords —
+  online accounts/leaderboards are an app-store-phase feature.
 - Save game in `localStorage`, autosaved every 10s and on tab hide.
 - Time-based simulation with timestamp catch-up → honest offline progress.
 - Simple WebAudio synth for taps/coins/fanfares (mutable).
