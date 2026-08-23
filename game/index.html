@@ -91,6 +91,10 @@ h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing
 .abasvg.s2{--shell:#a67a56;--shell2:#c39b74;--foot:#dab88e;--pore:#472e1b}
 .abasvg.s3{--shell:#9a6349;--shell2:#bd8a63;--foot:#d2ab7e;--pore:#38220f}
 .abasvg.s4{--shell:#7d5136;--shell2:#b07f47;--foot:#c9a173;--pore:#2a180a}
+/* can tiers: Standard, Premium, Gold — all wear the gold ingot */
+.cansvg.c-med{--canBody:#c9d4da;--canLabel:#2f7fa8}
+.cansvg.c-lrg{--canBody:#c9d4da;--canLabel:#a53a45}
+.cansvg.c-jum{--canBody:#e3c66f;--canLabel:#8a5f10}
 .stagechip{position:absolute;top:8px;left:8px;background:rgba(8,52,74,.8);color:#fff;font-size:11px;font-weight:700;
   padding:3px 9px;border-radius:99px}
 .countchip{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.85);color:var(--ink);
@@ -275,13 +279,29 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
       <circle cx="51" cy="30" r="3.4" fill="rgba(35,18,8,.28)"/>
       <circle cx="51.8" cy="29.4" r="1.6" fill="rgba(255,235,200,.4)"/>
     </g>
+    <!-- abalone can with a gold ingot on the label -->
+    <g id="canShape">
+      <ellipse cx="24" cy="41" rx="16.5" ry="3.6" fill="rgba(0,0,0,.18)"/>
+      <rect x="8" y="9" width="32" height="32" rx="5" fill="var(--canBody)"/>
+      <rect x="10.5" y="9" width="4.5" height="32" rx="2" fill="rgba(255,255,255,.35)"/>
+      <rect x="8" y="17" width="32" height="17" fill="var(--canLabel)"/>
+      <rect x="10.5" y="17" width="4.5" height="17" fill="rgba(255,255,255,.22)"/>
+      <!-- gold ingot -->
+      <path d="M12.5 32.5 L17 24 L31 24 L35.5 32.5 Z" fill="#f7c948" stroke="#7a520c" stroke-width="1.4"/>
+      <path d="M17 24 L20.5 19.5 L27.5 19.5 L31 24 Z" fill="#ffe08a" stroke="#7a520c" stroke-width="1.4"/>
+      <path d="M15.5 30.5 L18.5 25.5" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- lid -->
+      <ellipse cx="24" cy="9.5" rx="16" ry="4.6" fill="#e8eef1" stroke="#9fb0b8" stroke-width="1"/>
+      <ellipse cx="24" cy="9.5" rx="11.5" ry="3" fill="#d5dee2"/>
+      <ellipse cx="27" cy="9.2" rx="3.2" ry="1.5" fill="#b9c6cc"/>
+    </g>
   </defs>
 </svg>
 <div id="app">
 
   <header>
     <div class="hrow">
-      <div class="brand">🦪 <span>ABAGOLD FARM<small id="pname">HERMANUS · SOUTH AFRICA</small></span></div>
+      <div class="brand"><svg class="abasvg s4" style="width:26px;height:20px;flex:none" viewBox="0 0 64 48"><use href="#abaShape"/></svg> <span>ABAGOLD FARM<small id="pname">HERMANUS · SOUTH AFRICA</small></span></div>
       <div class="pill" id="moneyPill">💰 <span id="money">R0</span></div>
       <div class="pill gold">🫧 <span id="pearls">0</span></div>
       <button class="iconbtn" id="musicBtn" title="Music">🎵</button>
@@ -312,7 +332,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
         <div id="harvestInv"></div>
       </div>
       <div class="panel">
-        <h3>🥫 Canning line <span class="sub" id="canCap" style="font-size:11px;color:var(--muted);font-weight:600"></span></h3>
+        <h3><svg class="cansvg c-lrg" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg> Canning line <span class="sub" id="canCap" style="font-size:11px;color:var(--muted);font-weight:600"></span></h3>
         <div id="canLine"></div>
       </div>
       <div class="panel">
@@ -331,7 +351,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
         <div id="marketIndex" style="font-size:26px;font-weight:900"></div>
       </div>
       <div class="panel">
-        <h3>🥫 Sell canned abalone</h3>
+        <h3><svg class="cansvg c-jum" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg> Sell canned abalone</h3>
         <div id="sellCans"></div>
       </div>
       <div class="panel">
@@ -378,7 +398,7 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
 
   <nav>
     <button data-tab="farm" class="active"><span class="nic">🌊</span>Farm<span class="badge hidden" id="bFarm"></span></button>
-    <button data-tab="cannery"><span class="nic">🥫</span>Cannery<span class="badge hidden" id="bCan"></span></button>
+    <button data-tab="cannery"><span class="nic"><svg class="cansvg c-lrg" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg></span>Cannery<span class="badge hidden" id="bCan"></span></button>
     <button data-tab="market"><span class="nic">📈</span>Market<span class="badge hidden" id="bMkt"></span></button>
     <button data-tab="upgrades"><span class="nic">⚙️</span>Upgrades</button>
     <button data-tab="more"><span class="nic">🏆</span>More</button>
@@ -398,16 +418,16 @@ nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad
 const SAVE_KEY = 'abagoldFarm.v1';
 const OFFLINE_CAP_S = 8 * 3600;          // offline progress capped at 8h
 const GRADES = [
-  {key:'med',  name:'Medium abalone', icon:'🐚', fresh:15,  canName:'Standard can', canIcon:'🥫', can:75 },
-  {key:'lrg',  name:'Large abalone',  icon:'🐚', fresh:40,  canName:'Premium can',  canIcon:'🥫', can:200},
-  {key:'jum',  name:'Jumbo abalone',  icon:'🦪', fresh:90,  canName:'Gold can',     canIcon:'🏅', can:450},
+  {key:'med',  name:'Medium abalone', st:2, fresh:15,  canName:'Standard can', can:75 },
+  {key:'lrg',  name:'Large abalone',  st:3, fresh:40,  canName:'Premium can',  can:200},
+  {key:'jum',  name:'Jumbo abalone',  st:4, fresh:90,  canName:'Gold can',     can:450},
 ];
 const STAGES = [
-  {name:'Spat',     icon:'🫧', dur:90,   grade:-1},
-  {name:'Juvenile', icon:'🐌', dur:180,  grade:-1},
-  {name:'Medium',   icon:'🐚', dur:420,  grade:0},
-  {name:'Large',    icon:'🐚', dur:900,  grade:1},
-  {name:'Jumbo',    icon:'🦪', dur:0,    grade:2},
+  {name:'Spat',     dur:90,   grade:-1},
+  {name:'Juvenile', dur:180,  grade:-1},
+  {name:'Medium',   dur:420,  grade:0},
+  {name:'Large',    dur:900,  grade:1},
+  {name:'Jumbo',    dur:0,    grade:2},
 ];
 const TANK_DEFS = [
   {cost:0,     batch:40},
@@ -427,7 +447,7 @@ const UPGRADES = {
   filter:    {icon:'🧼', name:'UV filtration',    desc:'Cleaner water, less scrubbing needed.',                        costs:[1000,3500,10000], max:3},
   pumps:     {icon:'⚙️', name:'Backup pumps',     desc:'Fewer pump breakdowns, quicker fixes.',                        costs:[1500,5000,15000], max:3},
   feedlab:   {icon:'🌿', name:'Feed laboratory',  desc:'Better kelp &amp; formulated feed. Abalone grow faster.',      costs:[2000,7000,20000], max:3},
-  canline:   {icon:'🥫', name:'Canning line',     desc:'Faster canning, bigger batches.',                              costs:[1800,6000,18000], max:3},
+  canline:   {icon:canIconHTML('lrg',26), name:'Canning line', desc:'Faster canning, bigger batches.',                 costs:[1800,6000,18000], max:3},
   marketing: {icon:'📣', name:'Export marketing', desc:'Buyers pay more for your brand.',                              costs:[2500,8000,25000], max:3},
 };
 
@@ -455,8 +475,8 @@ const ACHIEVEMENTS = [
   {id:'clean10',  icon:'🧽', name:'Scrub Master',     desc:'Clean tanks 10 times',              pearls:1, test:s=>s.stats.cleans>=10},
   {id:'fix5',     icon:'🔧', name:'Pump Whisperer',   desc:'Fix 5 broken pumps',                pearls:2, test:s=>s.stats.fixes>=5},
   {id:'harv1',    icon:'🧺', name:'First Harvest',    desc:'Harvest your first batch',          pearls:2, test:s=>s.stats.harvested>=1},
-  {id:'harv500',  icon:'🦪', name:'Abalone Baron',    desc:'Harvest 500 abalone',               pearls:3, test:s=>s.stats.harvested>=500},
-  {id:'can10',    icon:'🥫', name:'Cannery Rookie',   desc:'Pack 10 cans',                      pearls:2, test:s=>s.stats.cans>=10},
+  {id:'harv500',  icon:abaIcon(4,24), name:'Abalone Baron', desc:'Harvest 500 abalone',         pearls:3, test:s=>s.stats.harvested>=500},
+  {id:'can10',    icon:canIconHTML('lrg',24), name:'Cannery Rookie', desc:'Pack 10 cans',       pearls:2, test:s=>s.stats.cans>=10},
   {id:'can200',   icon:'🏭', name:'Cannery Tycoon',   desc:'Pack 200 cans',                     pearls:4, test:s=>s.stats.cans>=200},
   {id:'rich10k',  icon:'💰', name:'Perlemoen Profit', desc:'Earn R10,000 in total sales',       pearls:3, test:s=>s.stats.earned>=10000},
   {id:'rich100k', icon:'🏆', name:'Export Legend',    desc:'Earn R100,000 in total sales',      pearls:5, test:s=>s.stats.earned>=100000},
@@ -515,6 +535,15 @@ function load(id){
 const $  = s=>document.querySelector(s);
 const fmtR = n=>'R'+Math.floor(n).toLocaleString('en-ZA');
 function clamp(v,a,b){return v<a?a:v>b?b:v}
+/* inline mini-icons drawn from the shared artwork (no snail emoji!) */
+function abaIcon(st,px){
+  return '<svg class="abasvg s'+st+'" style="width:'+px+'px;height:'+Math.round(px*0.75)+
+    'px;vertical-align:-'+Math.round(px*0.16)+'px" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+}
+function canIconHTML(key,px){
+  return '<svg class="cansvg c-'+key+'" style="width:'+px+'px;height:'+px+
+    'px;vertical-align:-'+Math.round(px*0.22)+'px" viewBox="0 0 48 48"><use href="#canShape"/></svg>';
+}
 function toast(msg){
   const t=document.createElement('div'); t.className='toast'; t.innerHTML=msg;
   $('#toasts').appendChild(t); setTimeout(()=>t.remove(),3200);
@@ -954,7 +983,7 @@ function enterGame(id){
   else{
     S=freshState();
     const p=loadProfiles().find(x=>x.id===id); if(p) S.name=p.name;
-    showModal('🦪','Welcome, '+esc(S.name)+'!',
+    showModal(abaIcon(4,52),'Welcome, '+esc(S.name)+'!',
       '<p>You\'ve inherited a small abalone farm on the shores of <b>Walker Bay, Hermanus</b>. '+
       'Feed your abalone kelp, keep the seawater clean, fix the pumps — and grow tiny spat into '+
       'jumbo perlemoen worth a fortune on the export market!</p>'+
@@ -1003,7 +1032,7 @@ function buildZoom(){
   const nextName=st.dur?STAGES[tk.stage+1].name:'Fully grown';
   $('#zoomRoot').innerHTML=
   '<div id="zoomWrap" class="'+dirty+'">'+
-    '<div class="zhead">🦪 <span><b>Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</b>'+
+    '<div class="zhead">'+abaIcon(empty?2:tk.stage,26)+' <span><b>Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</b>'+
       '<span class="sub">'+(empty?'Stock new spat from the hatchery':tk.count+' abalone · tap one to inspect')+'</span></span>'+
       '<button class="iconbtn" id="zoomClose">✕</button></div>'+
     '<div class="zwater" id="zwater" style="--abaW:'+(abaWidth(tk)*2.4)+'px">'+
@@ -1061,7 +1090,7 @@ function showInspect(k){
   else cond='😊 Happy, healthy and grazing.';
   const flav=ABA_FLAVOR[Math.floor(rnd(k*31+tk.stage*7)*ABA_FLAVOR.length)%ABA_FLAVOR.length];
   const card=document.getElementById('zcard'); if(!card) return;
-  card.innerHTML='<b>🦪 '+st.name+' abalone #'+(k+1)+'</b>'+
+  card.innerHTML='<b>'+abaIcon(tk.stage,20)+' '+st.name+' abalone #'+(k+1)+'</b>'+
     '<div class="zrow"><span>📏 '+(len>=10?(len/10).toFixed(1)+' cm':len+' mm')+' shell</span><span>⚖️ ±'+(wgt>=1000?(wgt/1000).toFixed(1)+' kg':wgt+' g')+'</span></div>'+
     '<div class="cond">'+cond+'</div><div class="flav">'+flav+'</div>';
   card.classList.remove('hidden');
@@ -1132,7 +1161,7 @@ function tankHTML(tk,i){
       '<div class="abas" id="t'+i+'abas" style="--abaW:'+abaWidth(tk)+'px">'+
         (empty?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#eaf7ff;font-weight:700">Tank empty — stock new spat!</span>':abas)+'</div>'+
       '<span class="stagechip">Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</span>'+
-      (empty?'':'<span class="countchip">'+tk.count+' 🦪</span>')+
+      (empty?'':'<span class="countchip">'+tk.count+' '+abaIcon(tk.stage,14)+'</span>')+
       (tk.broken?'<button class="pumpwarn" data-a="fix" data-i="'+i+'">🔧 PUMP DOWN! TAP '+(S.ups.pumps>=3?1:3-tk.fixTaps)+'×</button>':'')+
     '</div>'+
     '<div class="tankbody">'+
@@ -1186,7 +1215,7 @@ function renderFarm(){
 }
 
 function renderCannery(){
-  const inv=GRADES.map(g=>'<div class="invrow"><span>'+g.icon+' '+g.name+'</span><span class="qty">'+S.inv[g.key]+'</span>'+
+  const inv=GRADES.map(g=>'<div class="invrow"><span>'+abaIcon(g.st,22)+' '+g.name+'</span><span class="qty">'+S.inv[g.key]+'</span>'+
     '<button class="smallbtn green" data-can="'+g.key+'" '+((S.inv[g.key]<CAN_ABA||S.canJob)?'disabled':'')+'>Can ('+CAN_ABA+'→1)</button></div>').join('');
   $('#harvestInv').innerHTML=inv || '';
   $('#canCap').textContent='· batch of '+canBatchCap()+' · '+Math.round(canBatchTime())+'s';
@@ -1197,7 +1226,7 @@ function renderCannery(){
     line.innerHTML='<p style="font-size:13px">Packing <b>'+S.canJob.cans+' '+g.canName+'s</b>… '+Math.ceil(Math.max(0,S.canJob.remain))+'s</p>'+
       '<div class="progressline"><i style="width:'+clamp(pct,0,100)+'%"></i></div>';
   }else line.innerHTML='<p style="font-size:12px;color:var(--muted)">Line idle. Harvest abalone and start a batch — canned abalone sells for much more!</p>';
-  $('#canInv').innerHTML=GRADES.map(g=>'<div class="invrow"><span>'+g.canIcon+' '+g.canName+'</span><span class="qty">'+S.cans[g.key]+'</span></div>').join('');
+  $('#canInv').innerHTML=GRADES.map(g=>'<div class="invrow"><span>'+canIconHTML(g.key,24)+' '+g.canName+'</span><span class="qty">'+S.cans[g.key]+'</span></div>').join('');
 }
 
 function renderMarket(){
@@ -1210,12 +1239,12 @@ function renderMarket(){
   $('#marketTrend').className='pricearrow '+dir;
   $('#sellCans').innerHTML=GRADES.map(g=>{
     const p=Math.round(g.can*m);
-    return '<div class="invrow"><span>'+g.canIcon+' '+g.canName+' ×'+S.cans[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
+    return '<div class="invrow"><span>'+canIconHTML(g.key,24)+' '+g.canName+' ×'+S.cans[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
       '<button class="smallbtn gold" data-sellcan="'+g.key+'" '+(S.cans[g.key]?'':'disabled')+'>Sell all</button></div>';
   }).join('');
   $('#sellFresh').innerHTML=GRADES.map(g=>{
     const p=Math.round(g.fresh*m);
-    return '<div class="invrow"><span>'+g.icon+' '+g.name+' ×'+S.inv[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
+    return '<div class="invrow"><span>'+abaIcon(g.st,22)+' '+g.name+' ×'+S.inv[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
       '<button class="smallbtn" data-sellfresh="'+g.key+'" '+(S.inv[g.key]?'':'disabled')+'>Sell all</button></div>';
   }).join('');
 }
