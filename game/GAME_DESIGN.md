@@ -61,6 +61,10 @@ Sources consulted:
   works on GitHub Pages, loads instantly on mobile data.
 - PWA: `manifest.webmanifest` + `sw.js` → installable to the home screen and
   playable offline, portrait-locked, standalone (no browser chrome).
+- One-time install offer on first open: Android/Chrome triggers the native
+  install prompt via `beforeinstallprompt`; iOS Safari (no install API) shows
+  the Share → Add to Home Screen steps instead. Never shown when already
+  running installed, and never repeated once seen (device-level flag).
 - Abalone are drawn as a hand-crafted SVG (ear-shaped shell, respiratory pores,
   growth ridges, mother-of-pearl lip, foot fringe) with a colour palette per
   growth stage — spat are pale, jumbos dark and golden.

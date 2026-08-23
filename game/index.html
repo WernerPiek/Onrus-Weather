@@ -991,6 +991,44 @@ function enterGame(id){
       'Start farming!');
   }
   checkStreak(); renderAll(); save();
+  setTimeout(maybeOfferInstall, 1500);   // queues after the welcome/streak screens
+}
+
+/* ---------------- one-time "Add to Home Screen" offer ---------------- */
+const A2HS_KEY='abagoldFarm.a2hs';
+let deferredInstall=null;
+function isStandalone(){
+  try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }
+  catch(e){ return false; }
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredInstall=e;
+  maybeOfferInstall();
+});
+function maybeOfferInstall(){
+  if(!S) return;                                       // wait until a farmer is playing
+  if(isStandalone()){ try{localStorage.setItem(A2HS_KEY,'done');}catch(e){} return; }
+  try{ if(localStorage.getItem(A2HS_KEY)) return; }catch(e){ return; }
+  const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  const installBtn='<button id="a2hsGo" style="width:100%;border:0;border-radius:14px;padding:14px;'+
+    'font-size:15px;font-weight:800;color:#fff;background:linear-gradient(180deg,#34b56f,#238b52);'+
+    'cursor:pointer;margin-bottom:10px">📲 Add to Home Screen</button>';
+  if(deferredInstall){
+    try{localStorage.setItem(A2HS_KEY,'done');}catch(e){}   // one-time offer
+    showModal('📲','Put the farm on your phone!',
+      '<p>Install <b>Abagold Farm</b> on your home screen — it gets its own icon, opens '+
+      'full-screen like a real app, and your abalone keep growing while it\'s closed.</p>'+installBtn,
+      'Not now');
+  }else if(isIOS){
+    try{localStorage.setItem(A2HS_KEY,'done');}catch(e){}
+    showModal('📲','Put the farm on your phone!',
+      '<p>Install <b>Abagold Farm</b> on your home screen — it gets its own icon and opens '+
+      'full-screen like a real app:</p>'+
+      '<div class="fact">1️⃣ Tap the <b>Share</b> button below (the square with the ↑ arrow)<br><br>'+
+      '2️⃣ Scroll down and tap <b>"Add to Home Screen"</b><br><br>'+
+      '3️⃣ Tap <b>Add</b> — done! 🦪</div>',
+      'Got it!');
+  }
 }
 
 /* ---------------- full-screen tank inspection ---------------- */
@@ -1324,6 +1362,11 @@ document.addEventListener('click',e=>{
     return;
   }
   if(b.id==='zoomClose'){ closeZoom(); return; }
+  if(b.id==='a2hsGo'){
+    if(deferredInstall){ try{ deferredInstall.prompt(); }catch(e){} deferredInstall=null; }
+    const c=b.closest('.modalback'); const cl=c&&c.querySelector('button.close'); if(cl) cl.click();
+    return;
+  }
   if(b.closest('.modalback') && !b.dataset.tab) return; // profile overlays manage themselves
   if(b.dataset.a){
     const i=+b.dataset.i;
