@@ -983,7 +983,7 @@ function enterGame(id){
   else{
     S=freshState();
     const p=loadProfiles().find(x=>x.id===id); if(p) S.name=p.name;
-    showModal(abaIcon(4,52),'Welcome, '+esc(S.name)+'!',
+    showModal(abaIcon(4,52), S.name==='Farmer'?'Welcome to Abagold Farm!':'Welcome, '+esc(S.name)+'!',
       '<p>You\'ve inherited a small abalone farm on the shores of <b>Walker Bay, Hermanus</b>. '+
       'Feed your abalone kelp, keep the seawater clean, fix the pumps — and grow tiny spat into '+
       'jumbo perlemoen worth a fortune on the export market!</p>'+
@@ -1434,22 +1434,20 @@ window.addEventListener('pagehide',save);
 /* ---------------- boot ---------------- */
 (function boot(){
   if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
-  const ps=loadProfiles();
-  const legacy=localStorage.getItem(SAVE_KEY);
-  if(!ps.length && legacy){
-    // migrate the pre-profiles save into the first farmer, then let them pick a name
+  let ps=loadProfiles();
+  if(!ps.length){
+    // no upfront name screen: silently start as "Farmer" (rename/switch live in Settings)
     const id=newProfileId();
-    saveProfiles([{id, name:'Farmer', level:1, money:500, last:Date.now()}]);
-    try{ localStorage.setItem(saveSlot(id), legacy); localStorage.removeItem(SAVE_KEY); }catch(e){}
-    showNameModal('Name your farmer','Your farm is safe! From now on every player on this device gets their own farm — what\'s your screen name?','',
-      v=>{ const ps2=loadProfiles(); ps2[0].name=v; saveProfiles(ps2);
-           enterGame(id); S.name=v; save(); renderHeader(); });
+    ps=[{id, name:'Farmer', level:1, money:500, last:Date.now()}];
+    saveProfiles(ps);
+    const legacy=localStorage.getItem(SAVE_KEY);   // pre-profiles save migrates silently
+    if(legacy){ try{ localStorage.setItem(saveSlot(id), legacy); localStorage.removeItem(SAVE_KEY); }catch(e){} }
+    enterGame(id);
     return;
   }
-  if(!ps.length){ createFarmerFlow(false); return; }
   const last=localStorage.getItem(LAST_KEY);
-  const p=ps.find(x=>x.id===last);
-  if(p) enterGame(p.id); else showPicker(false);
+  const p=ps.find(x=>x.id===last) || ps.slice().sort((a,b)=>(b.last||0)-(a.last||0))[0];
+  enterGame(p.id);
 })();
 </script>
 </body>
