@@ -1,0 +1,15 @@
+{
+  "name": "Abagold Abalone Farm",
+  "short_name": "Abagold Farm",
+  "description": "Run your own abalone farm in Hermanus — feed, clean tanks, check pumps, harvest and can premium South African abalone!",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08344a",
+  "theme_color": "#0b4f6c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
