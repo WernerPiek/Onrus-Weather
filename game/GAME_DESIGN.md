@@ -61,6 +61,10 @@ Sources consulted:
   works on GitHub Pages, loads instantly on mobile data.
 - PWA: `manifest.webmanifest` + `sw.js` → installable to the home screen and
   playable offline, portrait-locked, standalone (no browser chrome).
+- One-time install offer on first open: Android/Chrome triggers the native
+  install prompt via `beforeinstallprompt`; iOS Safari (no install API) shows
+  the Share → Add to Home Screen steps instead. Never shown when already
+  running installed, and never repeated once seen (device-level flag).
 - Abalone are drawn as a hand-crafted SVG (ear-shaped shell, respiratory pores,
   growth ridges, mother-of-pearl lip, foot fringe) with a colour palette per
   growth stage — spat are pale, jumbos dark and golden.
@@ -73,11 +77,12 @@ Sources consulted:
   pads, wave-wash noise, sparse kalimba melody) — no audio files, nothing to
   license, and it starts on the first tap (browser autoplay rules). Separate
   toggles for music and sound effects.
-- Local player profiles: every farmer picks a screen name and gets their own
-  save slot, streak and progress on the device ("Who's farming?" picker, with
-  rename and switch in Settings). The last-played farmer resumes automatically;
-  pre-profile saves migrate into the first profile. No server, no passwords —
-  online accounts/leaderboards are an app-store-phase feature.
+- Local player profiles, frictionless by default: first launch drops straight
+  into the game as "Farmer" — no name screen. Rename and Switch farmer live in
+  Settings for shared phones; each farmer keeps an isolated save slot, streak
+  and progress, and the last-played farmer resumes automatically. Pre-profile
+  saves migrate silently. No server, no passwords — online
+  accounts/leaderboards are an app-store-phase feature.
 - Tap a tank's water to zoom into a full-screen tank view: more, bigger abalone
   drifting around, and tapping an individual abalone shows an inspection card
   (stage, shell length, weight, condition, flavour line). Feed/clean/fix/harvest
