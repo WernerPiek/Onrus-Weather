@@ -63,6 +63,10 @@ Sources consulted:
 - Abalone are drawn as a hand-crafted SVG (ear-shaped shell, respiratory pores,
   growth ridges, mother-of-pearl lip, foot fringe) with a colour palette per
   growth stage — spat are pale, jumbos dark and golden.
+- They graze slowly around the tank on individual wander paths (pure CSS
+  animations with wall-clock phase, so they never jump on re-render) and
+  visibly grow in size in real time as stage progress climbs — the tank DOM
+  only rebuilds on structural changes, with meters updated in place.
 - Ambient background music is generated procedurally with WebAudio (slow chord
   pads, wave-wash noise, sparse kalimba melody) — no audio files, nothing to
   license, and it starts on the first tap (browser autoplay rules). Separate

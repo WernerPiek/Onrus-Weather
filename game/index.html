@@ -72,12 +72,15 @@ h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing
 @keyframes shimmer{to{background-position:72px 0}}
 .bubble{position:absolute;bottom:-10px;border-radius:50%;background:rgba(255,255,255,.5);animation:rise linear infinite}
 @keyframes rise{from{transform:translateY(0);opacity:.7}to{transform:translateY(-130px);opacity:0}}
-.abas{position:absolute;inset:0;display:flex;flex-wrap:wrap;align-content:flex-end;justify-content:center;
-  gap:2px;padding:8px 10px 6px;font-size:20px;line-height:1}
-.aba{display:inline-block;animation:wiggle 3.2s ease-in-out infinite;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
-.aba:nth-child(2n){animation-delay:.7s}.aba:nth-child(3n){animation-delay:1.4s}
+.abas{position:absolute;inset:0}
+.abas svg.aba{position:absolute;width:var(--abaW,20px);aspect-ratio:64/48;height:auto;
+  transition:width 1.2s linear;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
 .aba:nth-child(2n){transform:scaleX(-1)}
-@keyframes wiggle{0%,100%{rotate:-5deg}50%{rotate:6deg;translate:0 -2px}}
+/* wiggle animates rotate only; drift animates translate — they compose */
+@keyframes wiggle{0%,100%{rotate:-4deg}50%{rotate:5deg}}
+@keyframes driftA{0%,100%{translate:0 0}25%{translate:26px -10px}50%{translate:10px -22px}75%{translate:-18px -7px}}
+@keyframes driftB{0%,100%{translate:0 0}30%{translate:-22px 9px}55%{translate:-30px -12px}80%{translate:12px -16px}}
+@keyframes driftC{0%,100%{translate:0 0}20%{translate:14px 14px}45%{translate:30px 2px}70%{translate:6px -14px}}
 /* stage palettes for the abalone artwork (spat → jumbo) */
 .abasvg.s0{--shell:#dcc4b2;--shell2:#eadbc9;--foot:#e9d2ba;--pore:#8a6a55}
 .abasvg.s1{--shell:#a89a68;--shell2:#c2b585;--foot:#dcc09b;--pore:#4d4227}
@@ -834,6 +837,14 @@ function presentModal(){
 
 /* ---------------- rendering ---------------- */
 function barClass(v){ return v>55?'ok':v>25?'mid':'low'; }
+function rnd(seed){ const x=Math.sin(seed*127.1+311.7)*43758.5453; return x-Math.floor(x); }
+/* abalone size grows continuously through each stage */
+const ABA_W=[15,19,24,29,35];
+function abaWidth(tk){
+  if(!STAGES[tk.stage].dur) return 36;
+  const a=ABA_W[tk.stage], b=ABA_W[Math.min(4,tk.stage+1)];
+  return Math.round((a+(b-a)*clamp(tk.prog,0,1))*10)/10;
+}
 
 function renderHeader(){
   $('#money').textContent=fmtR(S.money);
@@ -852,9 +863,18 @@ function tankHTML(tk,i){
   const nShow=Math.min(14, Math.max(3,Math.round(tk.count/10)));
   let abas='';
   if(!empty){
-    const w=[15,19,24,29,35][tk.stage];
-    for(let k=0;k<nShow;k++)
-      abas+='<svg class="aba abasvg s'+tk.stage+'" style="width:'+w+'px;height:'+Math.round(w*0.75)+'px" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+    const nowS=Date.now()/1000;
+    for(let k=0;k<nShow;k++){
+      const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
+      const left=(4+r1*72).toFixed(1), top=(10+r2*52).toFixed(1);
+      const drift=['driftA','driftB','driftC'][k%3];
+      const dDur=20+r3*16, wDur=2.6+r1*1.6;
+      // phase from wall-clock so rebuilds never make them jump
+      const dDel=(-((nowS+r4*40)%dDur)).toFixed(2), wDel=(-((nowS+r2*5)%wDur)).toFixed(2);
+      abas+='<svg class="aba abasvg s'+tk.stage+'" style="left:'+left+'%;top:'+top+'%;'+
+        'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
+        drift+' '+dDur.toFixed(1)+'s ease-in-out '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+    }
   }
   let bubbles='';
   if(!tk.broken && !empty)
@@ -871,19 +891,20 @@ function tankHTML(tk,i){
   }
   const growPct = st.dur? Math.floor(tk.prog*100) : 100;
   const nextName = st.dur? STAGES[tk.stage+1].name : 'Fully grown';
-  return '<div class="tank '+dirty+'">'+
+  return '<div class="tank '+dirty+'" id="tank'+i+'">'+
     '<div class="water"><div class="waterline"></div>'+bubbles+
-      '<div class="abas">'+(empty?'<span style="font-size:12px;color:#eaf7ff;font-weight:700;align-self:center">Tank empty — stock new spat!</span>':abas)+'</div>'+
+      '<div class="abas" id="t'+i+'abas" style="--abaW:'+abaWidth(tk)+'px">'+
+        (empty?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#eaf7ff;font-weight:700">Tank empty — stock new spat!</span>':abas)+'</div>'+
       '<span class="stagechip">Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</span>'+
       (empty?'':'<span class="countchip">'+tk.count+' 🦪</span>')+
       (tk.broken?'<button class="pumpwarn" data-a="fix" data-i="'+i+'">🔧 PUMP DOWN! TAP '+(S.ups.pumps>=3?1:3-tk.fixTaps)+'×</button>':'')+
     '</div>'+
     '<div class="tankbody">'+
       (empty?'':'<div class="meters">'+
-        '<div class="meter"><label>🌿 Feed <span>'+Math.floor(tk.feed)+'%</span></label><div class="bar"><i class="'+barClass(tk.feed)+'" style="width:'+tk.feed+'%"></i></div></div>'+
-        '<div class="meter"><label>💧 Water <span>'+Math.floor(tk.clean)+'%</span></label><div class="bar"><i class="'+barClass(tk.clean)+'" style="width:'+tk.clean+'%"></i></div></div>'+
+        '<div class="meter"><label>🌿 Feed <span id="t'+i+'feedL">'+Math.floor(tk.feed)+'%</span></label><div class="bar"><i id="t'+i+'feedI" class="'+barClass(tk.feed)+'" style="width:'+tk.feed+'%"></i></div></div>'+
+        '<div class="meter"><label>💧 Water <span id="t'+i+'cleanL">'+Math.floor(tk.clean)+'%</span></label><div class="bar"><i id="t'+i+'cleanI" class="'+barClass(tk.clean)+'" style="width:'+tk.clean+'%"></i></div></div>'+
       '</div>'+
-      '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i style="width:'+growPct+'%"></i></div><span>'+growPct+'%</span></div>')+
+      '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="t'+i+'growI" style="width:'+growPct+'%"></i></div><span id="t'+i+'growL">'+growPct+'%</span></div>')+
       '<div class="btnrow">'+
         (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
         '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
@@ -892,15 +913,40 @@ function tankHTML(tk,i){
     '</div></div>';
 }
 
+/* Rebuild tank DOM only when structure changes; otherwise update values in
+   place so the slow drift/wiggle animations run uninterrupted. */
+let farmSigLast='';
+function farmSig(){
+  return S.tanks.map(tk=>[tk.tier,tk.count,tk.stage,tk.broken?'b'+tk.fixTaps:'-',
+    tk.feed>95?1:0, tk.clean>95?1:0].join(',')).join('|');
+}
 function renderFarm(){
-  $('#farmSub').textContent=S.tanks.length+' / '+TANK_DEFS.length+' tanks';
-  $('#tanks').innerHTML=S.tanks.map(tankHTML).join('');
-  const bt=$('#buyTank');
-  if(S.tanks.length<TANK_DEFS.length){
-    const d=TANK_DEFS[S.tanks.length];
-    bt.classList.remove('hidden');
-    bt.innerHTML='➕ Build Tank '+(S.tanks.length+1)+' — '+fmtR(d.cost)+'<small>Holds '+d.batch+' abalone</small>';
-  }else bt.classList.add('hidden');
+  const sig=farmSig();
+  if(sig!==farmSigLast){
+    farmSigLast=sig;
+    $('#farmSub').textContent=S.tanks.length+' / '+TANK_DEFS.length+' tanks';
+    $('#tanks').innerHTML=S.tanks.map(tankHTML).join('');
+    const bt=$('#buyTank');
+    if(S.tanks.length<TANK_DEFS.length){
+      const d=TANK_DEFS[S.tanks.length];
+      bt.classList.remove('hidden');
+      bt.innerHTML='➕ Build Tank '+(S.tanks.length+1)+' — '+fmtR(d.cost)+'<small>Holds '+d.batch+' abalone</small>';
+    }else bt.classList.add('hidden');
+    return;
+  }
+  const set=(id,fn)=>{const el=document.getElementById(id); if(el) fn(el);};
+  S.tanks.forEach((tk,i)=>{
+    set('tank'+i,el=>{const d=tk.clean<25?'dirty2':tk.clean<55?'dirty1':''; const c='tank'+(d?' '+d:''); if(el.className!==c) el.className=c;});
+    if(tk.count<=0) return;
+    set('t'+i+'feedL', el=>el.textContent=Math.floor(tk.feed)+'%');
+    set('t'+i+'feedI', el=>{el.style.width=tk.feed+'%'; el.className=barClass(tk.feed);});
+    set('t'+i+'cleanL',el=>el.textContent=Math.floor(tk.clean)+'%');
+    set('t'+i+'cleanI',el=>{el.style.width=tk.clean+'%'; el.className=barClass(tk.clean);});
+    const pct=STAGES[tk.stage].dur?Math.floor(tk.prog*100):100;
+    set('t'+i+'growI', el=>el.style.width=pct+'%');
+    set('t'+i+'growL', el=>el.textContent=pct+'%');
+    set('t'+i+'abas',  el=>el.style.setProperty('--abaW',abaWidth(tk)+'px'));
+  });
 }
 
 function renderCannery(){
