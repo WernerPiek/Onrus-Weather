@@ -76,6 +76,10 @@ Sources consulted:
   rename and switch in Settings). The last-played farmer resumes automatically;
   pre-profile saves migrate into the first profile. No server, no passwords —
   online accounts/leaderboards are an app-store-phase feature.
+- Tap a tank's water to zoom into a full-screen tank view: more, bigger abalone
+  drifting around, and tapping an individual abalone shows an inspection card
+  (stage, shell length, weight, condition, flavour line). Feed/clean/fix/harvest
+  work from inside the zoom view.
 - Save game in `localStorage`, autosaved every 10s and on tab hide.
 - Time-based simulation with timestamp catch-up → honest offline progress.
 - Simple WebAudio synth for taps/coins/fanfares (mutable).
