@@ -561,7 +561,7 @@ function load(id){
 
 /* ---------------- helpers ---------------- */
 const $  = s=>document.querySelector(s);
-const fmtR = n=>'R'+Math.floor(n).toLocaleString('en-ZA');
+const fmtR = n=>'S$'+Math.floor(n).toLocaleString('en-SG');
 function clamp(v,a,b){return v<a?a:v>b?b:v}
 /* inline mini-icons drawn from the shared artwork (no snail emoji!) */
 function abaIcon(st,px){
@@ -1114,7 +1114,7 @@ function buildZoom(){
       '</div>'+
       '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="zgrowI" style="width:'+growPct+'%"></i></div><span id="zgrowL">'+growPct+'%</span></div>')+
       '<div class="btnrow">'+
-        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
+        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed S$'+FEED_COST+'</button>'+
         '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
         mainBtn+
       '</div>'+
@@ -1237,7 +1237,7 @@ function tankHTML(tk,i){
       '</div>'+
       '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="t'+i+'growI" style="width:'+growPct+'%"></i></div><span id="t'+i+'growL">'+growPct+'%</span></div>')+
       '<div class="btnrow">'+
-        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
+        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed S$'+FEED_COST+'</button>'+
         '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
         mainBtn+
       '</div>'+
