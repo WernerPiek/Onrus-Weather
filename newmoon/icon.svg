@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d1420"/>
+      <stop offset="1" stop-color="#3d0a12"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe08a"/>
+      <stop offset="0.5" stop-color="#f2c14e"/>
+      <stop offset="1" stop-color="#c98f1e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+  <!-- gold crescent moon -->
+  <path d="M330 70 A190 190 0 1 0 330 442 A150 150 0 1 1 330 70 Z" fill="url(#gold)"/>
+  <circle cx="352" cy="140" r="14" fill="#ffe08a"/>
+  <!-- abalone shell nestled in the crescent -->
+  <g transform="translate(300 300) rotate(-14) scale(1.15)">
+    <path d="M-75 10 C-75 -38 -30 -63 15 -55 C60 -47 78 -15 70 17 C62 47 22 62 -17 55 C-55 48 -75 35 -75 10 Z" fill="#8a5f10"/>
+    <path d="M-70 8 C-70 -34 -28 -57 14 -50 C55 -43 71 -14 64 15 C57 42 20 56 -16 49 C-51 43 -70 31 -70 8 Z" fill="#b3202c"/>
+    <path d="M-70 8 C-70 -34 -28 -57 14 -50 C29 -47 41 -41 50 -33 C19 -43 -23 -38 -48 -15 C-64 0 -69 10 -68 22 C-70 17 -70 12 -70 8 Z" fill="#d94a56" opacity="0.8"/>
+    <circle cx="-48" cy="15" r="5" fill="#f5d878"/>
+    <circle cx="-28" cy="26" r="4.5" fill="#f5d878"/>
+    <circle cx="-5" cy="33" r="4" fill="#f5d878"/>
+    <circle cx="19" cy="35" r="3.5" fill="#f5d878"/>
+    <path d="M50 -30 C20 -35 -25 -27 -50 -3" stroke="#7a1626" stroke-width="4" fill="none" opacity="0.6"/>
+  </g>
+</svg>

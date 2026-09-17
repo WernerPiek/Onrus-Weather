@@ -1,0 +1,15 @@
+{
+  "name": "New Moon Abalone Farm",
+  "short_name": "New Moon Farm",
+  "description": "Raise premium South African abalone in Hermanus — feed, clean tanks, check pumps, harvest and pack the New Moon cans loved across Singapore!",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#3d0a12",
+  "theme_color": "#6d1420",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
