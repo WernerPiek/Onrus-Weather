@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6d1420">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="New Moon Abalone Farm — raise premium South African abalone in Hermanus: feed, clean, pump, harvest and pack the cans loved across Singapore!">
+<title>New Moon Abalone Farm</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --deep:#3d0a12; --ocean:#6d1420; --sea:#96202e; --foam:#bfe6f5; --sand:#f5e9d4;
+  --gold:#e8b83a; --gold-d:#b8860b; --good:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
+  --card:#ffffff; --ink:#123244; --muted:#5b7c8d;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  background:linear-gradient(180deg,var(--deep) 0%,var(--ocean) 45%,var(--sea) 100%);
+  color:var(--ink); user-select:none; -webkit-user-select:none; overscroll-behavior:none;
+}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky;top:0;z-index:40;color:#fff;
+  padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
+  background:linear-gradient(180deg,rgba(61,10,18,.97),rgba(61,10,18,.88));
+  backdrop-filter:blur(6px);
+}
+.hrow{display:flex;align-items:center;gap:8px}
+.brand{font-weight:800;font-size:15px;letter-spacing:.3px;display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.brand small{font-weight:600;font-size:10px;opacity:.75;display:block;letter-spacing:1px}
+.pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;
+  padding:4px 10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.pill.gold{color:#ffe9a8}
+.xpwrap{margin-top:7px;display:flex;align-items:center;gap:8px;font-size:11px}
+.xpbar{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,#7ee0a3,#2ecc71);border-radius:99px;transition:width .4s}
+.lvl{font-weight:800;background:var(--gold);color:#4d3505;border-radius:8px;padding:2px 8px;font-size:11px}
+.iconbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:10px;
+  width:34px;height:34px;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* ---------- Ticker ---------- */
+#ticker{min-height:26px;padding:4px 14px;font-size:12px;color:#dff3fd;background:rgba(255,255,255,.06);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ticker.event{background:rgba(232,184,58,.25);color:#ffe9a8;font-weight:700}
+
+/* ---------- Main ---------- */
+main{flex:1;padding:12px 12px 90px;overflow-y:auto}
+.tab{display:none}.tab.active{display:block}
+h2.section{color:#eaf7ff;font-size:14px;text-transform:uppercase;letter-spacing:1.5px;margin:4px 2px 10px;
+  display:flex;justify-content:space-between;align-items:center}
+h2.section span.sub{font-size:11px;opacity:.7;text-transform:none;letter-spacing:0;font-weight:500}
+
+/* ---------- Tank cards ---------- */
+.tank{background:var(--card);border-radius:18px;margin-bottom:14px;overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,20,35,.35)}
+.tank .water{
+  position:relative;height:118px;overflow:hidden;
+  background:linear-gradient(180deg,#9fd9f0 0%,#5db6dd 55%,#2f8fbe 100%);
+}
+.tank.dirty2 .water{background:linear-gradient(180deg,#a9c9b8 0%,#7ba68f 55%,#597f6c 100%)}
+.tank.dirty1 .water{background:linear-gradient(180deg,#a5d3d6 0%,#6fb3b0 55%,#488a92 100%)}
+.tank .waterline{position:absolute;top:0;left:0;right:0;height:14px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 18px,rgba(255,255,255,.15) 18px 36px);
+  opacity:.5;animation:shimmer 3s linear infinite}
+@keyframes shimmer{to{background-position:72px 0}}
+.bubble{position:absolute;bottom:-10px;border-radius:50%;background:rgba(255,255,255,.5);animation:rise linear infinite}
+@keyframes rise{from{transform:translateY(0);opacity:.7}to{transform:translateY(-130px);opacity:0}}
+.abas{position:absolute;inset:0}
+.abas svg.aba,.zwater svg.aba{position:absolute;width:var(--abaW,20px);aspect-ratio:64/48;height:auto;
+  transition:width 1.2s linear;filter:drop-shadow(0 2px 2px rgba(0,40,60,.3))}
+.aba:nth-child(2n){transform:scaleX(-1)}
+/* wiggle animates rotate only; crawl animates translate — they compose.
+   Abalone crawl: slow steady glides with grazing pauses (plateaus), run linear. */
+@keyframes wiggle{0%,100%{rotate:-3deg}50%{rotate:3deg}}
+@keyframes crawlA{0%{translate:0 0}16%{translate:15px 5px}26%{translate:15px 5px}
+  48%{translate:27px -7px}58%{translate:27px -7px}82%{translate:-7px -11px}90%{translate:-7px -11px}100%{translate:0 0}}
+@keyframes crawlB{0%{translate:0 0}20%{translate:-16px 8px}30%{translate:-16px 8px}
+  52%{translate:-27px -9px}62%{translate:-27px -9px}84%{translate:9px -13px}92%{translate:9px -13px}100%{translate:0 0}}
+@keyframes crawlC{0%{translate:0 0}14%{translate:11px 12px}26%{translate:11px 12px}
+  50%{translate:25px 2px}60%{translate:25px 2px}80%{translate:5px -11px}90%{translate:5px -11px}100%{translate:0 0}}
+/* stage palettes for the abalone artwork (spat → jumbo) */
+.abasvg.s0{--shell:#dcc4b2;--shell2:#eadbc9;--foot:#e9d2ba;--pore:#8a6a55}
+.abasvg.s1{--shell:#a89a68;--shell2:#c2b585;--foot:#dcc09b;--pore:#4d4227}
+.abasvg.s2{--shell:#a67a56;--shell2:#c39b74;--foot:#dab88e;--pore:#472e1b}
+.abasvg.s3{--shell:#9a6349;--shell2:#bd8a63;--foot:#d2ab7e;--pore:#38220f}
+.abasvg.s4{--shell:#7d5136;--shell2:#b07f47;--foot:#c9a173;--pore:#2a180a}
+/* can tiers: Standard, Premium, Gold — all wear the gold ingot */
+.cansvg.c-med{--canBody:#c9d4da;--canLabel:#b3202c}
+.cansvg.c-lrg{--canBody:#c9d4da;--canLabel:#5e0f1a}
+.cansvg.c-jum{--canBody:#e3c66f;--canLabel:#8a5f10}
+.stagechip{position:absolute;top:8px;left:8px;background:rgba(61,10,18,.8);color:#fff;font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:99px}
+.countchip{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.85);color:var(--ink);
+  font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px}
+.pumpwarn{position:absolute;bottom:6px;right:8px;background:var(--bad);color:#fff;font-size:11px;font-weight:800;
+  padding:4px 10px;border-radius:99px;animation:blink 1s steps(2) infinite;cursor:pointer;border:0}
+@keyframes blink{50%{opacity:.45}}
+.tankbody{padding:10px 12px 12px}
+.meters{display:flex;gap:10px;margin-bottom:9px}
+.meter{flex:1}
+.meter label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
+  display:flex;justify-content:space-between}
+.bar{height:9px;background:#e3edf2;border-radius:99px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.bar .ok{background:linear-gradient(90deg,#6fd598,#2ecc71)}
+.bar .mid{background:linear-gradient(90deg,#f7c96b,#f39c12)}
+.bar .low{background:linear-gradient(90deg,#f1958b,#e74c3c)}
+.growrow{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-bottom:9px}
+.growrow .bar{flex:1;margin-top:0;height:11px}
+.growrow .bar i{background:linear-gradient(90deg,#7fc8ee,#1279ad)}
+.btnrow{display:flex;gap:8px}
+button.act{
+  flex:1;border:0;border-radius:12px;padding:11px 4px;font-size:13px;font-weight:800;cursor:pointer;
+  color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.18);transition:transform .06s
+}
+button.act:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+button.act.feed{background:linear-gradient(180deg,#34b56f,#238b52)}
+button.act.clean{background:linear-gradient(180deg,#3aa7dd,#1f7cab)}
+button.act.harvest{background:linear-gradient(180deg,#f0b429,#cf8e0a);color:#4d3505}
+button.act.stock{background:linear-gradient(180deg,#8a6fd1,#6547ad)}
+button.act.boost{background:linear-gradient(180deg,#ec7ab7,#c94f92)}
+button.act:disabled{opacity:.45;filter:grayscale(.4);cursor:default}
+.buytank{width:100%;border:2px dashed rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#eaf7ff;
+  border-radius:18px;padding:22px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:14px}
+.buytank small{display:block;font-weight:600;opacity:.75;margin-top:4px}
+
+/* ---------- Panels (cannery/market/upgrades/more) ---------- */
+.panel{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,20,35,.3)}
+.panel h3{font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.invrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #edf3f6;font-size:13px}
+.invrow:last-child{border-bottom:0}
+.invrow .qty{font-weight:800}
+.smallbtn{border:0;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#3aa7dd,#1f7cab);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.smallbtn.gold{background:linear-gradient(180deg,#f0b429,#cf8e0a);color:#4d3505}
+.smallbtn.green{background:linear-gradient(180deg,#34b56f,#238b52)}
+.smallbtn:disabled{opacity:.45;cursor:default}
+.pricearrow{font-weight:800}
+.up{color:var(--good)}.down{color:var(--bad)}
+.progressline{height:12px;background:#e3edf2;border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.progressline i{display:block;height:100%;background:linear-gradient(90deg,#f0b429,#cf8e0a);transition:width 1s linear}
+.upg{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #edf3f6}
+.upg:last-child{border-bottom:0}
+.upg .ic{font-size:26px;width:38px;text-align:center}
+.upg .info{flex:1;min-width:0}
+.upg .info b{font-size:13px;display:block}
+.upg .info span{font-size:11px;color:var(--muted)}
+.dots{display:flex;gap:3px;margin-top:3px}
+.dot{width:14px;height:6px;border-radius:99px;background:#dfe9ee}.dot.on{background:var(--gold)}
+.factcard{background:linear-gradient(135deg,#6d1420,#96202e);color:#eaf7ff;border-radius:16px;padding:16px;margin-bottom:12px}
+.factcard h4{color:var(--gold);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.factcard p{font-size:13px;line-height:1.55}
+.ach{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #edf3f6;font-size:13px}
+.ach:last-child{border-bottom:0}
+.ach .ic{font-size:22px;width:32px;text-align:center;filter:grayscale(1);opacity:.35}
+.ach.done .ic{filter:none;opacity:1}
+.ach .t b{display:block;font-size:13px}.ach .t span{font-size:11px;color:var(--muted)}
+.cta{background:linear-gradient(135deg,#b8860b,#e8b83a);border-radius:16px;padding:16px;margin-bottom:12px;color:#3d2b04;text-align:center}
+.cta b{font-size:15px;display:block;margin-bottom:6px}
+.cta p{font-size:12px;margin-bottom:10px}
+.cta a{display:inline-block;background:#3d0a12;color:#ffe9a8;text-decoration:none;font-weight:800;font-size:13px;
+  padding:10px 18px;border-radius:12px}
+
+/* ---------- Bottom nav ---------- */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:40;
+  display:flex;background:rgba(61,10,18,.97);backdrop-filter:blur(8px);
+  padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1)}
+nav button{flex:1;background:none;border:0;color:#9cc3d5;font-size:10px;font-weight:700;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;position:relative}
+nav button .nic{font-size:20px}
+nav button.active{color:#ffe9a8;background:rgba(255,255,255,.08)}
+nav .badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--bad);color:#fff;font-size:9px;
+  min-width:15px;height:15px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+/* ---------- Toasts & modals ---------- */
+#toasts{position:fixed;top:calc(90px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  z-index:60;width:min(92%,440px);pointer-events:none}
+.toast{background:rgba(61,10,18,.95);color:#fff;border-left:4px solid var(--gold);border-radius:12px;
+  padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:8px;box-shadow:0 8px 20px rgba(0,0,0,.4);
+  animation:toastin .25s ease-out}
+@keyframes toastin{from{transform:translateY(-14px);opacity:0}}
+.modalback{position:fixed;inset:0;background:rgba(3,20,30,.72);z-index:70;display:flex;align-items:center;
+  justify-content:center;padding:22px}
+.modal{background:#fff;border-radius:20px;max-width:400px;width:100%;padding:22px;text-align:center;
+  animation:pop .28s cubic-bezier(.34,1.4,.64,1);max-height:82dvh;overflow-y:auto}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+.modal .big{font-size:46px;margin-bottom:8px}
+.modal h3{font-size:19px;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.modal .fact{background:#eef7fc;border-radius:12px;padding:12px;font-size:13px;color:var(--ink);
+  line-height:1.5;margin-bottom:14px;text-align:left}
+.modal .fact b{color:var(--sea)}
+.modal button.close{width:100%;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:800;
+  color:#fff;background:linear-gradient(180deg,#34b56f,#238b52);cursor:pointer}
+.rewardline{font-size:15px;font-weight:800;color:var(--gold-d);margin-bottom:14px}
+#nameInput{width:100%;padding:13px;border:2px solid #cfe3ee;border-radius:12px;font-size:16px;
+  margin-bottom:14px;text-align:center;font-weight:800;color:var(--ink);outline:none}
+#nameInput:focus{border-color:var(--sea)}
+.pickrow{width:100%;display:flex;align-items:center;gap:10px;border:2px solid #e3edf2;background:#f7fbfd;
+  border-radius:14px;padding:13px 14px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer;
+  margin-bottom:10px;text-align:left}
+.pickrow span{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted)}
+.pickrow.new{border-style:dashed;color:var(--sea);justify-content:center}
+.cancellink{background:none;border:0;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
+  margin-top:10px;text-decoration:underline}
+
+/* ---------- full-screen tank inspection ---------- */
+.tank .water{cursor:zoom-in}
+#zoomWrap{position:fixed;inset:0;z-index:55;max-width:480px;margin:0 auto;display:flex;flex-direction:column;
+  background:#3d0a12;animation:zoomin .22s ease-out}
+@keyframes zoomin{from{transform:scale(.94);opacity:0}}
+.zhead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;color:#fff}
+.zhead b{font-size:15px}
+.zhead .sub{font-size:11px;opacity:.75;display:block;font-weight:600}
+.zhead .iconbtn{margin-left:auto}
+.zwater{flex:1;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#9fd9f0 0%,#5db6dd 55%,#2f8fbe 100%)}
+#zoomWrap.dirty1 .zwater{background:linear-gradient(180deg,#a5d3d6 0%,#6fb3b0 55%,#488a92 100%)}
+#zoomWrap.dirty2 .zwater{background:linear-gradient(180deg,#a9c9b8 0%,#7ba68f 55%,#597f6c 100%)}
+.zwater svg.aba{cursor:pointer}
+.zwater .pumpwarn{bottom:auto;top:14px;right:14px;font-size:13px;padding:8px 14px}
+.zhint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(61,10,18,.65);color:#dff3fd;
+  font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;pointer-events:none}
+.zcard{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,255,255,.97);border-radius:16px;
+  padding:13px 15px;font-size:13px;color:var(--ink);box-shadow:0 10px 26px rgba(0,15,25,.45);
+  animation:pop .25s cubic-bezier(.34,1.4,.64,1)}
+.zcard b{font-size:14px}
+.zcard .zrow{display:flex;gap:14px;margin:7px 0;font-weight:700;color:var(--sea)}
+.zcard .cond{font-weight:700}
+.zcard .flav{font-size:12px;color:var(--muted);font-style:italic;margin-top:5px}
+.zpanel{background:var(--card);border-radius:20px 20px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom))}
+.hidden{display:none!important}
+.floaty{position:fixed;z-index:65;font-weight:900;font-size:15px;pointer-events:none;color:#ffe9a8;
+  text-shadow:0 2px 4px rgba(0,0,0,.6);animation:floatup 1.1s ease-out forwards}
+@keyframes floatup{to{transform:translateY(-46px);opacity:0}}
+</style>
+</head>
+<body>
+<!-- Shared abalone artwork: ear-shaped shell, breathing pores, growth ridges, foot fringe -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="abaShape">
+      <!-- tentacles -->
+      <path d="M9 20 Q4 15 2 11" fill="none" stroke="var(--foot)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M9 31 Q4 36 2 40" fill="none" stroke="var(--foot)" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="2" cy="10.5" r="1.3" fill="var(--foot)"/>
+      <circle cx="2" cy="40.5" r="1.3" fill="var(--foot)"/>
+      <!-- muscular foot fringe -->
+      <path d="M32 6 C15 6 5 14 4 25 C3 36 15 45 32 45 C49 45 61 37 60 25 C59 13 49 6 32 6 Z" fill="var(--foot)"/>
+      <path d="M32 8 C17 8 7 15 6 25 C5 34 16 43 32 43 C48 43 59 35 58 25 C57 14 47 8 32 8 Z" fill="rgba(0,0,0,.10)"/>
+      <!-- shell (ear-shaped, apex to the right rear) -->
+      <path d="M7 25 C7 12 21 5 35 6.5 C51 8 59 16 58.5 26 C58 36 47 42 33 42 C18 42 7 37 7 25 Z" fill="var(--shell)" stroke="rgba(255,236,205,.55)" stroke-width="1.4"/>
+      <!-- lighter anterior sweep -->
+      <path d="M7 25 C7 12 21 5 35 6.5 C42 7.2 48 9.5 52.5 13 C42 9.5 28 10 18 16 C11 20 8 24 8.5 30 C7.5 28 7 26.6 7 25 Z" fill="var(--shell2)"/>
+      <!-- growth ridges radiating from the apex -->
+      <path d="M52 33 C44 20 32 12 16 12" fill="none" stroke="rgba(35,18,8,.30)" stroke-width="1.6"/>
+      <path d="M51.5 34.5 C42 25 30 18.5 13 20" fill="none" stroke="rgba(35,18,8,.24)" stroke-width="1.4"/>
+      <path d="M50 36.5 C42 30.5 30 26 15 28.5" fill="none" stroke="rgba(35,18,8,.18)" stroke-width="1.2"/>
+      <!-- nacre gleam along the lip -->
+      <path d="M10 31 C15 38 25 41.5 34 41.5 C26 43.5 14 40 9.5 33 Z" fill="rgba(210,240,250,.5)"/>
+      <path d="M12 15 C18 10 27 8 34 8.5 C26 7 17 9.5 11.5 14.5 Z" fill="rgba(255,255,255,.35)"/>
+      <!-- respiratory pores along the left arc -->
+      <circle cx="13.5" cy="24" r="2.3" fill="var(--pore)"/>
+      <circle cx="16.5" cy="18.5" r="2.1" fill="var(--pore)"/>
+      <circle cx="21.5" cy="14.4" r="1.9" fill="var(--pore)"/>
+      <circle cx="28" cy="11.8" r="1.7" fill="var(--pore)"/>
+      <circle cx="35" cy="10.6" r="1.4" fill="var(--pore)"/>
+      <circle cx="13" cy="23.4" r="0.8" fill="rgba(255,255,255,.55)"/>
+      <circle cx="16" cy="17.9" r="0.7" fill="rgba(255,255,255,.5)"/>
+      <circle cx="21" cy="13.9" r="0.6" fill="rgba(255,255,255,.45)"/>
+      <!-- apex whorl -->
+      <circle cx="51" cy="30" r="3.4" fill="rgba(35,18,8,.28)"/>
+      <circle cx="51.8" cy="29.4" r="1.6" fill="rgba(255,235,200,.4)"/>
+    </g>
+    <!-- New Moon crescent mark -->
+    <g id="moonShape">
+      <circle cx="24" cy="24" r="21" fill="#6d1420"/>
+      <path d="M31 6.5 A19 19 0 1 0 31 41.5 A15 15 0 1 1 31 6.5 Z" fill="#f2c14e"/>
+      <circle cx="33.5" cy="14" r="1.8" fill="#f2c14e"/>
+    </g>
+    <!-- abalone can with a gold ingot on the label -->
+    <g id="canShape">
+      <ellipse cx="24" cy="41" rx="16.5" ry="3.6" fill="rgba(0,0,0,.18)"/>
+      <rect x="8" y="9" width="32" height="32" rx="5" fill="var(--canBody)"/>
+      <rect x="10.5" y="9" width="4.5" height="32" rx="2" fill="rgba(255,255,255,.35)"/>
+      <rect x="8" y="17" width="32" height="17" fill="var(--canLabel)"/>
+      <rect x="10.5" y="17" width="4.5" height="17" fill="rgba(255,255,255,.22)"/>
+      <!-- gold crescent moon -->
+      <path d="M28 18.5 A7.2 7.2 0 1 0 28 32.5 A5.6 5.6 0 1 1 28 18.5 Z" fill="#f7c948" stroke="#7a520c" stroke-width="1.2"/>
+      <circle cx="29.5" cy="21" r="0.9" fill="#fff3cf"/>
+      <!-- lid -->
+      <ellipse cx="24" cy="9.5" rx="16" ry="4.6" fill="#e8eef1" stroke="#9fb0b8" stroke-width="1"/>
+      <ellipse cx="24" cy="9.5" rx="11.5" ry="3" fill="#d5dee2"/>
+      <ellipse cx="27" cy="9.2" rx="3.2" ry="1.5" fill="#b9c6cc"/>
+    </g>
+  </defs>
+</svg>
+<div id="app">
+
+  <header>
+    <div class="hrow">
+      <div class="brand"><svg style="width:24px;height:24px;flex:none" viewBox="0 0 48 48"><use href="#moonShape"/></svg> <span>NEW MOON FARM<small id="pname">SOUTH AFRICAN ABALONE</small></span></div>
+      <div class="pill" id="moneyPill">💰 <span id="money">R0</span></div>
+      <div class="pill gold">🫧 <span id="pearls">0</span></div>
+      <button class="iconbtn" id="musicBtn" title="Music">🎵</button>
+      <button class="iconbtn" id="soundBtn" title="Sound">🔊</button>
+    </div>
+    <div class="xpwrap">
+      <span class="lvl" id="lvl">LV 1</span>
+      <div class="xpbar"><i id="xpfill" style="width:0%"></i></div>
+      <span id="streak" title="Daily streak">🔥0</span>
+    </div>
+  </header>
+
+  <div id="ticker">Welcome to your abalone farm on the Walker Bay coast! 🌊</div>
+
+  <main>
+    <!-- FARM -->
+    <section class="tab active" id="tab-farm">
+      <h2 class="section">Sea Water Tanks <span class="sub" id="farmSub"></span></h2>
+      <div id="tanks"></div>
+      <button class="buytank hidden" id="buyTank"></button>
+    </section>
+
+    <!-- CANNERY -->
+    <section class="tab" id="tab-cannery">
+      <h2 class="section">Cannery</h2>
+      <div class="panel">
+        <h3>🧺 Harvested abalone</h3>
+        <div id="harvestInv"></div>
+      </div>
+      <div class="panel">
+        <h3><svg class="cansvg c-lrg" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg> Canning line <span class="sub" id="canCap" style="font-size:11px;color:var(--muted);font-weight:600"></span></h3>
+        <div id="canLine"></div>
+      </div>
+      <div class="panel">
+        <h3>📦 Canned stock</h3>
+        <div id="canInv"></div>
+      </div>
+    </section>
+
+    <!-- MARKET -->
+    <section class="tab" id="tab-market">
+      <h2 class="section">Export Market</h2>
+      <div class="panel">
+        <h3>📈 Abalone price index <span id="marketTrend" class="pricearrow"></span></h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px">
+          Demand from Hong Kong &amp; Singapore moves prices. Sell high!</p>
+        <div id="marketIndex" style="font-size:26px;font-weight:900"></div>
+      </div>
+      <div class="panel">
+        <h3><svg class="cansvg c-jum" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg> Sell canned abalone</h3>
+        <div id="sellCans"></div>
+      </div>
+      <div class="panel">
+        <h3>🦪 Sell fresh (lower price)</h3>
+        <div id="sellFresh"></div>
+      </div>
+    </section>
+
+    <!-- UPGRADES -->
+    <section class="tab" id="tab-upgrades">
+      <h2 class="section">Farm Upgrades</h2>
+      <div class="panel" id="upgrades"></div>
+    </section>
+
+    <!-- MORE -->
+    <section class="tab" id="tab-more">
+      <h2 class="section">New Moon &amp; You</h2>
+      <div class="cta">
+        <b>Hungry for the real thing? 😋</b>
+        <p>New Moon South African abalone — premium perlemoen from the pristine waters of
+           South Africa. Firm, succulent, and the star of every festive table.</p>
+        <a href="https://www.gjheshop.com/product/new-moon-premium-south-africa-abalone-4-5pcs-425g/" target="_blank" rel="noopener">🛒 Buy New Moon abalone</a>
+      </div>
+      <div class="panel">
+        <h3>🏆 Achievements</h3>
+        <div id="achList"></div>
+      </div>
+      <div class="panel">
+        <h3>📚 Abalone facts unlocked</h3>
+        <div id="factList" style="font-size:13px"></div>
+      </div>
+      <div class="panel">
+        <h3>⚙️ Settings</h3>
+        <div class="invrow"><span>Farmer name</span><button class="smallbtn" id="renameBtn">Rename</button></div>
+        <div class="invrow"><span>Switch farmer</span><button class="smallbtn green" id="switchBtn">Switch</button></div>
+        <div class="invrow"><span>Background music</span><button class="smallbtn" id="musicBtn2">Toggle</button></div>
+        <div class="invrow"><span>Sound effects</span><button class="smallbtn" id="soundBtn2">Toggle</button></div>
+        <div class="invrow"><span>Reset game</span><button class="smallbtn" style="background:linear-gradient(180deg,#f1958b,#c0392b)" id="resetBtn">Reset</button></div>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px">
+          New Moon Abalone Farm — demonstration build for New Moon by Abagold, Hermanus. Progress is saved on this device.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button data-tab="farm" class="active"><span class="nic">🌊</span>Farm<span class="badge hidden" id="bFarm"></span></button>
+    <button data-tab="cannery"><span class="nic"><svg class="cansvg c-lrg" style="width:20px;height:20px" viewBox="0 0 48 48"><use href="#canShape"/></svg></span>Cannery<span class="badge hidden" id="bCan"></span></button>
+    <button data-tab="market"><span class="nic">📈</span>Market<span class="badge hidden" id="bMkt"></span></button>
+    <button data-tab="upgrades"><span class="nic">⚙️</span>Upgrades</button>
+    <button data-tab="more"><span class="nic">🏆</span>More</button>
+  </nav>
+
+  <div id="zoomRoot"></div>
+  <div id="toasts"></div>
+  <div id="modalRoot"></div>
+</div>
+
+<script>
+'use strict';
+/* =========================================================
+   ABAGOLD ABALONE FARM — mobile idle/appointment farming game
+   ========================================================= */
+
+const SAVE_KEY = 'newmoonFarm.v1';
+const OFFLINE_CAP_S = 8 * 3600;          // offline progress capped at 8h
+const GRADES = [
+  {key:'med',  name:'Medium abalone', st:2, fresh:15,  canName:'Brine can', can:75 },
+  {key:'lrg',  name:'Large abalone',  st:3, fresh:40,  canName:'Braised can',  can:200},
+  {key:'jum',  name:'Jumbo abalone',  st:4, fresh:90,  canName:'Royale can',     can:450},
+];
+const STAGES = [
+  {name:'Spat',     dur:90,   grade:-1},
+  {name:'Juvenile', dur:180,  grade:-1},
+  {name:'Medium',   dur:420,  grade:0},
+  {name:'Large',    dur:900,  grade:1},
+  {name:'Jumbo',    dur:0,    grade:2},
+];
+const TANK_DEFS = [
+  {cost:0,     batch:40},
+  {cost:900,   batch:60},
+  {cost:2500,  batch:85},
+  {cost:7000,  batch:115},
+  {cost:18000, batch:155},
+  {cost:45000, batch:200},
+];
+const SPAT_COST_EACH = 3;
+const FEED_COST = 30;
+const CAN_ABA = 3;                        // abalone per can
+const CAN_TIME = 45;                      // s per batch, before upgrades
+
+const UPGRADES = {
+  feeder:    {icon:'🧪', name:'Auto-feeder',      desc:'Kelp feeders drip-feed the tanks. Feed lasts longer.',        costs:[1200,4000,12000], max:3},
+  filter:    {icon:'🧼', name:'UV filtration',    desc:'Cleaner water, less scrubbing needed.',                        costs:[1000,3500,10000], max:3},
+  pumps:     {icon:'⚙️', name:'Backup pumps',     desc:'Fewer pump breakdowns, quicker fixes.',                        costs:[1500,5000,15000], max:3},
+  feedlab:   {icon:'🌿', name:'Feed laboratory',  desc:'Better kelp &amp; formulated feed. Abalone grow faster.',      costs:[2000,7000,20000], max:3},
+  canline:   {icon:canIconHTML('lrg',26), name:'Canning line', desc:'Faster canning, bigger batches.',                 costs:[1800,6000,18000], max:3},
+  marketing: {icon:'📣', name:'Export marketing', desc:'Buyers pay more for your brand.',                              costs:[2500,8000,25000], max:3},
+};
+
+const FACTS = [
+  'Abagold is a real abalone farm in <b>Hermanus, South Africa</b>, on the shores of Walker Bay — one of the largest land-based abalone farms in the world.',
+  'The South African abalone, <b>Haliotis midae</b>, is known locally as <b>perlemoen</b> — from the Dutch for "mother-of-pearl".',
+  'Abalone farms pump <b>fresh seawater</b> from the ocean through their tanks around the clock — that\'s why the pumps in this game matter so much!',
+  'Abalone are herbivores. On the farm they graze on <b>kelp</b> and specially formulated feed, just like you\'re feeding them here.',
+  'Abalone grow <b>very slowly</b> — it takes roughly 4–5 years to raise one to market size. Patience is a real farming skill!',
+  'Baby abalone are called <b>spat</b>. They start life smaller than a grain of rice in the farm\'s hatchery.',
+  'An abalone holds onto surfaces with one big muscular <b>foot</b> — that foot is the delicacy people love to eat.',
+  'Farmed abalone is a <b>sustainable choice</b>: farming takes pressure off wild abalone, which are heavily poached in South Africa.',
+  'Most South African farmed abalone is exported to <b>Asia</b> — especially Hong Kong, China, Singapore and Japan — canned, dried or frozen.',
+  'Canned abalone is considered a <b>luxury gift</b> in many Asian cultures, often served at weddings and Lunar New Year feasts.',
+  'Clean water is everything: abalone are sensitive to water quality, so farms monitor <b>oxygen and temperature</b> constantly.',
+  'The shimmering inside of an abalone shell is <b>mother-of-pearl</b> (nacre) — the shells are used for jewellery and décor.',
+  'Abalone farming creates hundreds of <b>jobs</b> in coastal towns like Hermanus, supporting the local community.',
+  'A "red tide" (harmful algal bloom) can threaten abalone farms — teams work day and night to protect the animals when one hits.',
+  'Abalone can be enjoyed <b>braised, grilled, or sliced thin</b> as sashimi. Slow, gentle cooking keeps it tender.',
+  'New Moon South African abalone is packed from <b>perlemoen</b> raised in these Walker Bay waters — firm, succulent and cream-coloured.',
+  'A New Moon <b>Premium Brine</b> can holds 4–5 whole abalone (425g); the <b>Royale</b> range comes double-boiled or braised in rich scallop sauce.',
+  'In Singapore, New Moon abalone is the star of festive <b>pen cai</b> and Lunar New Year feasts — a gift of prosperity.',
+  'You reached master farmer level! Next step: taste the real thing — <b>New Moon South African abalone</b>. 🥫',
+];
+
+const ACHIEVEMENTS = [
+  {id:'feed10',   icon:'🌿', name:'Kelp Keeper',      desc:'Feed your abalone 10 times',        pearls:1, test:s=>s.stats.feeds>=10},
+  {id:'clean10',  icon:'🧽', name:'Scrub Master',     desc:'Clean tanks 10 times',              pearls:1, test:s=>s.stats.cleans>=10},
+  {id:'fix5',     icon:'🔧', name:'Pump Whisperer',   desc:'Fix 5 broken pumps',                pearls:2, test:s=>s.stats.fixes>=5},
+  {id:'harv1',    icon:'🧺', name:'First Harvest',    desc:'Harvest your first batch',          pearls:2, test:s=>s.stats.harvested>=1},
+  {id:'harv500',  icon:abaIcon(4,24), name:'Abalone Baron', desc:'Harvest 500 abalone',         pearls:3, test:s=>s.stats.harvested>=500},
+  {id:'can10',    icon:canIconHTML('lrg',24), name:'Cannery Rookie', desc:'Pack 10 cans',       pearls:2, test:s=>s.stats.cans>=10},
+  {id:'can200',   icon:'🏭', name:'Cannery Tycoon',   desc:'Pack 200 cans',                     pearls:4, test:s=>s.stats.cans>=200},
+  {id:'rich10k',  icon:'💰', name:'Perlemoen Profit', desc:'Earn R10,000 in total sales',       pearls:3, test:s=>s.stats.earned>=10000},
+  {id:'rich100k', icon:'🏆', name:'Export Legend',    desc:'Earn R100,000 in total sales',      pearls:5, test:s=>s.stats.earned>=100000},
+  {id:'tanks3',   icon:'🌊', name:'Growing the Farm', desc:'Own 3 tanks',                       pearls:2, test:s=>s.tanks.length>=3},
+  {id:'tanks6',   icon:'🏗️', name:'Full Farm',        desc:'Own all 6 tanks',                   pearls:5, test:s=>s.tanks.length>=6},
+  {id:'streak7',  icon:'🔥', name:'Tide Watcher',     desc:'7-day check-in streak',             pearls:5, test:s=>s.streak>=7},
+  {id:'jumbo50',  icon:'👑', name:'Jumbo Genius',     desc:'Harvest 50 jumbo abalone',          pearls:4, test:s=>s.stats.jumbos>=50},
+];
+
+/* ---------------- state ---------------- */
+let S = null;
+function freshTank(tier){
+  return {tier, count:TANK_DEFS[tier].batch, stage:0, prog:0, feed:100, clean:100, broken:false, fixTaps:0};
+}
+function freshState(){
+  return {
+    money:500, pearls:0, xp:0, level:1,
+    tanks:[freshTank(0)],
+    inv:{med:0,lrg:0,jum:0}, cans:{med:0,lrg:0,jum:0},
+    canJob:null,                    // {grade, cans, remain}
+    ups:{feeder:0,filter:0,pumps:0,feedlab:0,canline:0,marketing:0},
+    factsUnlocked:1, ach:[],
+    streak:0, lastDay:'',
+    stats:{feeds:0,cleans:0,fixes:0,harvested:0,jumbos:0,cans:0,earned:0},
+    event:null,                     // {type, remain}
+    name:'Farmer',
+    last:Date.now(), sound:true, music:true, started:Date.now(),
+  };
+}
+/* ---- local player profiles: each farmer has their own save slot ---- */
+const PROFILES_KEY='newmoonFarm.profiles', LAST_KEY='newmoonFarm.lastProfile';
+let profileId=null;
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function loadProfiles(){ try{ return JSON.parse(localStorage.getItem(PROFILES_KEY))||[]; }catch(e){ return []; } }
+function saveProfiles(ps){ try{ localStorage.setItem(PROFILES_KEY, JSON.stringify(ps)); }catch(e){} }
+function saveSlot(id){ return 'newmoonFarm.save.'+id; }
+function newProfileId(){ return 'p'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36); }
+function save(){
+  if(!S || !profileId) return;
+  S.last = Date.now();
+  try{
+    localStorage.setItem(saveSlot(profileId), JSON.stringify(S));
+    const ps=loadProfiles(), p=ps.find(x=>x.id===profileId);
+    if(p){ p.name=S.name; p.level=S.level; p.money=Math.floor(S.money); p.last=Date.now(); saveProfiles(ps); }
+  }catch(e){}
+}
+function load(id){
+  try{
+    const raw = localStorage.getItem(saveSlot(id));
+    if(raw){ const d = JSON.parse(raw); if(d && d.tanks) return Object.assign(freshState(), d); }
+  }catch(e){}
+  return null;
+}
+
+/* ---------------- helpers ---------------- */
+const $  = s=>document.querySelector(s);
+const fmtR = n=>'R'+Math.floor(n).toLocaleString('en-ZA');
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+/* inline mini-icons drawn from the shared artwork (no snail emoji!) */
+function abaIcon(st,px){
+  return '<svg class="abasvg s'+st+'" style="width:'+px+'px;height:'+Math.round(px*0.75)+
+    'px;vertical-align:-'+Math.round(px*0.16)+'px" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+}
+function canIconHTML(key,px){
+  return '<svg class="cansvg c-'+key+'" style="width:'+px+'px;height:'+px+
+    'px;vertical-align:-'+Math.round(px*0.22)+'px" viewBox="0 0 48 48"><use href="#canShape"/></svg>';
+}
+function toast(msg){
+  const t=document.createElement('div'); t.className='toast'; t.innerHTML=msg;
+  $('#toasts').appendChild(t); setTimeout(()=>t.remove(),3200);
+}
+function floaty(x,y,txt){
+  const f=document.createElement('div'); f.className='floaty'; f.textContent=txt;
+  f.style.left=(x-20)+'px'; f.style.top=(y-30)+'px';
+  document.body.appendChild(f); setTimeout(()=>f.remove(),1100);
+}
+
+/* tiny synth sounds */
+let AC=null;
+function blip(freq,dur,type){
+  if(!S.sound) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(.12,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+(dur||.15));
+    o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime+(dur||.15));
+  }catch(e){}
+}
+const sfx={tap:()=>blip(520,.09,'triangle'), coin:()=>{blip(880,.09);setTimeout(()=>blip(1320,.12),70)},
+  good:()=>{blip(660,.1);setTimeout(()=>blip(990,.14),90)}, bad:()=>blip(160,.25,'sawtooth'),
+  levelup:()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>blip(f,.14),i*110))}};
+
+/* ---------------- ambient ocean music (procedural, no audio files) ---------------- */
+const MUSIC={started:false, master:null, timer:null, chord:0};
+const MUSIC_VOL=0.14;
+const CHORDS=[            // Cmaj9 · Am11 · Fmaj9 · Gsus — slow coastal drift
+  [130.81,196.00,246.94,329.63,392.00],
+  [110.00,164.81,220.00,261.63,392.00],
+  [ 87.31,174.61,220.00,261.63,329.63],
+  [ 98.00,146.83,196.00,293.66,392.00],
+];
+const PENTA=[523.25,587.33,659.26,783.99,880.00,1046.5];
+function startMusic(){
+  if(MUSIC.started || !S || !S.music) return;
+  let ac;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    ac=AC;
+  }catch(e){ return; }
+  MUSIC.started=true;
+  const master=ac.createGain();
+  master.gain.setValueAtTime(0.0001,ac.currentTime);
+  master.gain.linearRampToValueAtTime(MUSIC_VOL,ac.currentTime+5);
+  master.connect(ac.destination);
+  MUSIC.master=master;
+  // breaking waves: looped noise, lowpass, slow swell LFO
+  const len=ac.sampleRate*4, buf=ac.createBuffer(1,len,ac.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  const noise=ac.createBufferSource(); noise.buffer=buf; noise.loop=true;
+  const nf=ac.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=380; nf.Q.value=0.5;
+  const ng=ac.createGain(); ng.gain.value=0.22;
+  const lfo=ac.createOscillator(); lfo.frequency.value=1/9;
+  const lfoG=ac.createGain(); lfoG.gain.value=0.15;
+  lfo.connect(lfoG); lfoG.connect(ng.gain);
+  noise.connect(nf); nf.connect(ng); ng.connect(master);
+  noise.start(); lfo.start();
+  musicBar();
+  MUSIC.timer=setInterval(musicBar,8000);
+}
+function musicBar(){
+  if(!MUSIC.started || !S.music || !AC) return;
+  const ac=AC, t=ac.currentTime+0.05, bar=8;
+  const chord=CHORDS[MUSIC.chord%CHORDS.length]; MUSIC.chord++;
+  // soft pad: two detuned voices per note, slow swell
+  chord.forEach((f,i)=>{
+    [-3,3].forEach(det=>{
+      const o=ac.createOscillator(); o.type=i<2?'sine':'triangle';
+      o.frequency.value=f; o.detune.value=det;
+      const fl=ac.createBiquadFilter(); fl.type='lowpass'; fl.frequency.value=750;
+      const g=ac.createGain();
+      const peak=0.05/(1+i*0.55);
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.linearRampToValueAtTime(peak,t+2.6);
+      g.gain.setValueAtTime(peak,t+bar-2.5);
+      g.gain.linearRampToValueAtTime(0.0001,t+bar+0.4);
+      o.connect(fl); fl.connect(g); g.connect(MUSIC.master);
+      o.start(t); o.stop(t+bar+0.6);
+    });
+  });
+  // sparse kalimba-like melody
+  if(Math.random()<0.75){
+    const n=1+Math.floor(Math.random()*3);
+    for(let k=0;k<n;k++){
+      const nt=t+1+Math.random()*(bar-2.5);
+      const f=PENTA[Math.floor(Math.random()*PENTA.length)];
+      const o=ac.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g=ac.createGain();
+      g.gain.setValueAtTime(0.0001,nt);
+      g.gain.linearRampToValueAtTime(0.055,nt+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,nt+1.4);
+      o.connect(g); g.connect(MUSIC.master);
+      o.start(nt); o.stop(nt+1.5);
+    }
+  }
+}
+function setMusic(on){
+  S.music=on;
+  if(on){
+    if(!MUSIC.started) startMusic();
+    else if(MUSIC.master&&AC) MUSIC.master.gain.linearRampToValueAtTime(MUSIC_VOL,AC.currentTime+1.5);
+  }else if(MUSIC.master&&AC){
+    MUSIC.master.gain.linearRampToValueAtTime(0.0001,AC.currentTime+0.8);
+  }
+  renderHeader();
+}
+
+/* ---------------- XP / levels ---------------- */
+function xpNeed(l){ return 80 + (l-1)*110; }
+function addXP(n){
+  S.xp += n;
+  while(S.xp >= xpNeed(S.level)){
+    S.xp -= xpNeed(S.level); S.level++;
+    const reward = 120 + S.level*40;
+    S.money += reward;
+    let factHTML='';
+    if(S.factsUnlocked < FACTS.length){
+      factHTML = '<div class="fact">💡 <b>Did you know?</b><br>'+FACTS[S.factsUnlocked]+'</div>';
+      S.factsUnlocked++;
+    }
+    sfx.levelup();
+    showModal('🎉','Level '+S.level+'!',
+      '<div class="rewardline">+'+fmtR(reward)+' bonus</div>'+factHTML+
+      '<p>New goals unlocked. Keep the pumps running!</p>');
+  }
+}
+
+/* ---------------- market ---------------- */
+let mktPrev = 1;
+function marketMult(){
+  const t = Date.now()/1000;
+  let m = 1 + 0.22*Math.sin(t/620) + 0.10*Math.sin(t/147) + 0.05*Math.sin(t/47);
+  if(S.event && S.event.type==='export') m *= 1.6;
+  m *= 1 + 0.10*S.ups.marketing;
+  return clamp(m, 0.7, 2.6);
+}
+
+/* ---------------- factors ---------------- */
+function feedDecay(){ return (100/600) * (1 - 0.22*S.ups.feeder); }     // full → empty in ~10 min
+function dirtRate(){  return (100/900) * (1 - 0.22*S.ups.filter); }     // full → filthy in ~15 min
+function growthMult(){ return 1 + 0.15*S.ups.feedlab; }
+function canBatchCap(){ return 5 + 3*S.ups.canline; }
+function canBatchTime(){ return CAN_TIME * (1 - 0.2*S.ups.canline); }
+
+/* ---------------- simulation ---------------- */
+function simulate(dt, offline){
+  const out = {stages:0, cansDone:0};
+  // canning line
+  if(S.canJob){
+    S.canJob.remain -= dt;
+    if(S.canJob.remain <= 0){
+      S.cans[S.canJob.grade] += S.canJob.cans;
+      S.stats.cans += S.canJob.cans;
+      out.cansDone = S.canJob.cans;
+      if(!offline){ toast('🥫 Canning done: +'+S.canJob.cans+' '+GRADES[gIdx(S.canJob.grade)].canName+'s'); sfx.good(); addXP(3*S.canJob.cans); }
+      else addXP(3*S.canJob.cans);
+      S.canJob = null;
+    }
+  }
+  // tanks
+  for(const tk of S.tanks){
+    if(tk.count<=0) continue;
+    tk.feed  = clamp(tk.feed  - feedDecay()*dt, 0, 100);
+    tk.clean = clamp(tk.clean - dirtRate()*dt, 0, 100);
+    // auto-feeder level 3 refills automatically (costs money)
+    if(S.ups.feeder>=3 && tk.feed<15 && S.money>=FEED_COST){ S.money-=FEED_COST; tk.feed=100; }
+    if(tk.broken) continue;
+    // random pump breakdown (only while playing — we're kind offline)
+    if(!offline){
+      const p = dt/1500 * (1 - 0.28*S.ups.pumps);
+      if(Math.random() < p){ tk.broken=true; tk.fixTaps=0; sfx.bad(); toast('⚠️ Pump failure in Tank '+(S.tanks.indexOf(tk)+1)+'! Tap the wrench!'); }
+    }
+    const st = STAGES[tk.stage];
+    if(!st.dur) continue; // jumbo = fully grown
+    const f = (0.15 + 0.85*clamp(tk.feed/40,0,1)) * (0.25 + 0.75*clamp(tk.clean/35,0,1)) * growthMult();
+    tk.prog += (dt*f)/st.dur;
+    while(tk.prog>=1 && STAGES[tk.stage].dur){
+      tk.prog -= 1; tk.stage++; out.stages++;
+      if(!STAGES[tk.stage].dur) tk.prog = 0;
+      if(!offline){ toast('📈 Tank '+(S.tanks.indexOf(tk)+1)+' grew to '+STAGES[tk.stage].name+'!'); sfx.good(); }
+    }
+    if(!STAGES[tk.stage].dur) tk.prog=0;
+  }
+  return out;
+}
+
+/* ---------------- random events ---------------- */
+function maybeEvent(dt){
+  if(S.event){
+    S.event.remain -= dt;
+    if(S.event.remain<=0){ S.event=null; setTicker(); }
+    return;
+  }
+  if(Math.random() < dt/170){ // avg every ~3 min
+    const roll = Math.random();
+    if(roll<0.28){
+      const p = Math.random()<0.25?2:1; S.pearls+=p; sfx.coin();
+      showModal('🫧','A pearl!','<p>A diver found <b>'+p+' pearl'+(p>1?'s':'')+'</b> while checking the pipes. Lucky you!</p><div class="rewardline">+'+p+' 🫧</div>');
+    }else if(roll<0.52){
+      S.tanks.forEach(t=>{if(t.count>0)t.feed=100});
+      toast('🚜 Fresh kelp delivery! All tanks fed for free.'); sfx.good();
+    }else if(roll<0.78){
+      S.event={type:'export', remain:90};
+      toast('📦 EXPORT ORDER! Prices +60% for 90 seconds — sell now!'); sfx.coin();
+      setTicker();
+    }else{
+      addXP(6);
+      toast('🦭 A curious seal watched you work. +6 XP for staying calm.');
+    }
+  }
+}
+function setTicker(){
+  const el=$('#ticker');
+  if(S.event && S.event.type==='export'){
+    el.className='event'; el.textContent='📦 EXPORT ORDER ACTIVE — prices +60%! Sell your cans! ('+Math.ceil(S.event.remain)+'s)';
+  }else{
+    el.className='';
+    const tips=['Tip: Tap a tank\'s water to zoom in and inspect your abalone! 🔍',
+      'Tip: Jumbo abalone are worth 6× more than Medium — patience pays! 🦪',
+      'Tip: Canning multiplies your profit. Fresh sales are for quick cash. 🥫',
+      'Tip: Hungry abalone grow slowly. Keep feed above 40%. 🌿',
+      'Tip: Watch the market index and sell when it\'s green. 📈',
+      'Real abalone take 4–5 years to grow. Yours are speedy! ⏱️',
+      'Come back tomorrow for your streak bonus! 🔥'];
+    el.textContent = tips[Math.floor(Date.now()/15000)%tips.length];
+  }
+}
+
+/* ---------------- daily streak ---------------- */
+function checkStreak(){
+  const today = new Date().toDateString();
+  if(S.lastDay===today) return;
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  S.streak = (S.lastDay===yesterday) ? S.streak+1 : 1;
+  S.lastDay = today;
+  const r = 80 + 70*Math.min(S.streak,7);
+  const pearl = (S.streak%3===0)?1:0;
+  S.money += r; S.pearls += pearl;
+  showModal('🔥','Day '+S.streak+' streak!',
+    '<div class="rewardline">+'+fmtR(r)+(pearl?' &nbsp;+1 🫧':'')+'</div>'+
+    '<p>Check in every day to grow your bonus. Miss a day and the streak resets!</p>');
+}
+
+/* ---------------- achievements ---------------- */
+function checkAchievements(){
+  for(const a of ACHIEVEMENTS){
+    if(S.ach.includes(a.id)) continue;
+    if(a.test(S)){
+      S.ach.push(a.id); S.pearls += a.pearls; sfx.levelup();
+      showModal(a.icon,'Achievement: '+a.name,'<p>'+a.desc+'</p><div class="rewardline">+'+a.pearls+' 🫧</div>');
+    }
+  }
+}
+
+/* ---------------- actions ---------------- */
+function gIdx(key){ return GRADES.findIndex(g=>g.key===key); }
+
+function doFeed(i,ev){
+  const tk=S.tanks[i];
+  if(S.money<FEED_COST){ toast('Not enough money for kelp! Sell something first.'); sfx.bad(); return; }
+  if(tk.feed>95) return;
+  S.money-=FEED_COST; tk.feed=100; S.stats.feeds++; addXP(2); sfx.tap();
+  if(ev) floaty(ev.clientX||180, ev.clientY||300, '🌿');
+  renderAll();
+}
+function doClean(i,ev){
+  const tk=S.tanks[i];
+  if(tk.clean>95) return;
+  tk.clean=100; S.stats.cleans++; addXP(2); sfx.tap();
+  if(ev) floaty(ev.clientX||180, ev.clientY||300, '✨');
+  renderAll();
+}
+function doFix(i,ev){
+  const tk=S.tanks[i]; if(!tk.broken) return;
+  const need = S.ups.pumps>=3 ? 1 : 3;
+  tk.fixTaps++; sfx.tap();
+  if(ev) floaty(ev.clientX||180, ev.clientY||260, '🔧');
+  if(tk.fixTaps>=need){
+    tk.broken=false; tk.fixTaps=0; S.stats.fixes++; addXP(5); sfx.good();
+    toast('✅ Pump fixed! Water flowing again.');
+  }
+  renderAll();
+}
+function doHarvest(i){
+  const tk=S.tanks[i];
+  const g = STAGES[tk.stage].grade;
+  if(g<0 || tk.count<=0) return;
+  S.inv[GRADES[g].key] += tk.count;
+  S.stats.harvested += tk.count;
+  if(GRADES[g].key==='jum') S.stats.jumbos += tk.count;
+  addXP(Math.min(60, tk.count));
+  toast('🧺 Harvested '+tk.count+' '+GRADES[g].name.toLowerCase()+'! Off to the cannery.');
+  sfx.coin();
+  tk.count=0; tk.stage=0; tk.prog=0;
+  renderAll(); checkAchievements();
+}
+function doStock(i){
+  const tk=S.tanks[i];
+  const cost = TANK_DEFS[tk.tier].batch*SPAT_COST_EACH;
+  if(S.money<cost){ toast('Spat cost '+fmtR(cost)+' — sell some stock first!'); sfx.bad(); return; }
+  S.money-=cost; tk.count=TANK_DEFS[tk.tier].batch; tk.stage=0; tk.prog=0; tk.feed=100; tk.clean=100;
+  toast('🫧 '+tk.count+' baby spat from the hatchery!'); sfx.good(); addXP(4);
+  renderAll();
+}
+function doBoost(i){
+  const tk=S.tanks[i];
+  if(S.pearls<3){ toast('Need 3 🫧 pearls to boost growth.'); sfx.bad(); return; }
+  if(!STAGES[tk.stage].dur || tk.count<=0) return;
+  S.pearls-=3; tk.prog=1.0001;
+  simulate(0.01,false);
+  toast('✨ Pearl magic! The abalone surged a whole stage.'); sfx.levelup();
+  renderAll();
+}
+function doBuyTank(){
+  const tier=S.tanks.length;
+  if(tier>=TANK_DEFS.length) return;
+  const cost=TANK_DEFS[tier].cost;
+  if(S.money<cost){ toast('Tank '+(tier+1)+' costs '+fmtR(cost)+'.'); sfx.bad(); return; }
+  S.money-=cost; S.tanks.push(freshTank(tier));
+  toast('🌊 New tank built and stocked with spat!'); sfx.levelup(); addXP(20);
+  renderAll(); checkAchievements();
+}
+function doCanStart(key){
+  if(S.canJob){ toast('The canning line is busy!'); return; }
+  const have=S.inv[key];
+  if(have<CAN_ABA){ toast('Need at least '+CAN_ABA+' abalone for a can.'); return; }
+  const cans=Math.min(Math.floor(have/CAN_ABA), canBatchCap());
+  S.inv[key]-=cans*CAN_ABA;
+  S.canJob={grade:key, cans, remain:canBatchTime()};
+  toast('🥫 Canning '+cans+' '+GRADES[gIdx(key)].canName+'s…'); sfx.tap();
+  renderAll();
+}
+function doSellCans(key){
+  const n=S.cans[key]; if(!n) return;
+  const price=Math.round(GRADES[gIdx(key)].can*marketMult());
+  const total=price*n;
+  S.cans[key]=0; S.money+=total; S.stats.earned+=total; addXP(Math.min(80,Math.ceil(total/100)));
+  toast('💰 Sold '+n+' cans for '+fmtR(total)+'!'); sfx.coin();
+  renderAll(); checkAchievements();
+}
+function doSellFresh(key){
+  const n=S.inv[key]; if(!n) return;
+  const price=Math.round(GRADES[gIdx(key)].fresh*marketMult());
+  const total=price*n;
+  S.inv[key]=0; S.money+=total; S.stats.earned+=total; addXP(Math.min(40,Math.ceil(total/100)));
+  toast('💰 Sold '+n+' fresh for '+fmtR(total)+'.'); sfx.coin();
+  renderAll(); checkAchievements();
+}
+function doUpgrade(key){
+  const u=UPGRADES[key], lv=S.ups[key];
+  if(lv>=u.max) return;
+  const cost=u.costs[lv];
+  if(S.money<cost){ toast(u.name+' Lv'+(lv+1)+' costs '+fmtR(cost)+'.'); sfx.bad(); return; }
+  S.money-=cost; S.ups[key]++; addXP(15); sfx.levelup();
+  toast('⚙️ '+u.name+' upgraded to level '+S.ups[key]+'!');
+  renderAll();
+}
+
+/* ---------------- modal (queued so rewards never stack/block) ---------------- */
+const modalQueue=[];
+function showModal(big,title,html,btn){
+  modalQueue.push({big,title,html,btn});
+  if(modalQueue.length===1) presentModal();
+}
+function presentModal(){
+  const m=modalQueue[0]; if(!m) return;
+  const back=document.createElement('div'); back.className='modalback';
+  back.innerHTML='<div class="modal"><div class="big">'+m.big+'</div><h3>'+m.title+'</h3>'+m.html+
+    '<button class="close">'+(m.btn||'Continue')+'</button></div>';
+  back.querySelector('.close').onclick=()=>{
+    back.remove(); modalQueue.shift(); renderAll(); presentModal();
+  };
+  $('#modalRoot').appendChild(back);
+}
+
+/* ---------------- profile screens (own overlays, outside the modal queue) ---------------- */
+function showNameModal(title, sub, initial, cb, allowCancel){
+  const back=document.createElement('div'); back.className='modalback';
+  back.innerHTML='<div class="modal"><div class="big">🧑‍🌾</div><h3>'+title+'</h3>'+
+    '<p>'+sub+'</p>'+
+    '<input id="nameInput" maxlength="14" autocomplete="off" placeholder="e.g. Skipper" value="'+esc(initial||'')+'">'+
+    '<button class="close">Let\'s farm! 🦪</button>'+
+    (allowCancel?'<button class="cancellink">Cancel</button>':'')+
+    '</div>';
+  const inp=back.querySelector('#nameInput');
+  const done=()=>{
+    const v=inp.value.trim().slice(0,14);
+    if(v.length<2){ inp.style.borderColor='var(--bad)'; inp.placeholder='At least 2 characters!'; return; }
+    back.remove(); cb(v);
+  };
+  back.querySelector('.close').onclick=done;
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done(); });
+  if(allowCancel) back.querySelector('.cancellink').onclick=()=>back.remove();
+  document.body.appendChild(back);
+  setTimeout(()=>inp.focus(),150);
+}
+function showPicker(allowCancel){
+  const ps=loadProfiles().sort((a,b)=>(b.last||0)-(a.last||0));
+  const back=document.createElement('div'); back.className='modalback';
+  back.innerHTML='<div class="modal"><div class="big">🌊</div><h3>Who\'s farming?</h3>'+
+    '<p>Every farmer gets their own farm, money and progress on this device.</p>'+
+    ps.map(p=>'<button class="pickrow" data-pid="'+p.id+'">🧑‍🌾 '+esc(p.name)+
+      '<span>Lv '+(p.level||1)+' · '+fmtR(p.money||0)+'</span></button>').join('')+
+    '<button class="pickrow new">➕ New farmer</button>'+
+    (allowCancel?'<button class="cancellink">Cancel</button>':'')+
+    '</div>';
+  back.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.pid){ back.remove(); enterGame(b.dataset.pid); }
+    else if(b.classList.contains('new')){ back.remove(); createFarmerFlow(true); }
+    else if(b.classList.contains('cancellink')){ back.remove(); }
+  });
+  document.body.appendChild(back);
+}
+function createFarmerFlow(fromPicker){
+  showNameModal('New farmer','Choose a screen name — each farmer runs their own abalone farm on this device.','',
+    v=>{
+      const ps=loadProfiles(), id=newProfileId();
+      ps.push({id, name:v, level:1, money:500, last:Date.now()}); saveProfiles(ps);
+      enterGame(id);
+    }, fromPicker && loadProfiles().length>0);
+}
+function enterGame(id){
+  profileId=id;
+  try{ localStorage.setItem(LAST_KEY,id); }catch(e){}
+  document.querySelectorAll('.modalback').forEach(m=>m.remove());
+  closeZoom();
+  farmSigLast=''; modalQueue.length=0; lastTick=Date.now();
+  const loaded=load(id);
+  if(loaded){ S=loaded; offlineCatchup(); }
+  else{
+    S=freshState();
+    const p=loadProfiles().find(x=>x.id===id); if(p) S.name=p.name;
+    showModal(abaIcon(4,52), S.name==='Farmer'?'Welcome to New Moon Farm!':'Welcome, '+esc(S.name)+'!',
+      '<p>You\'ve inherited a small abalone farm on the shores of <b>Walker Bay, Hermanus</b>. '+
+      'Feed your abalone kelp, keep the seawater clean, fix the pumps — and grow tiny spat into '+
+      'jumbo perlemoen worth a fortune on the export market!</p>'+
+      '<div class="fact">💡 <b>Did you know?</b><br>'+FACTS[0]+'</div>',
+      'Start farming!');
+  }
+  checkStreak(); renderAll(); save();
+  setTimeout(maybeOfferInstall, 1500);   // queues after the welcome/streak screens
+}
+
+/* ---------------- one-time "Add to Home Screen" offer ---------------- */
+const A2HS_KEY='newmoonFarm.a2hs';
+let deferredInstall=null;
+function isStandalone(){
+  try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }
+  catch(e){ return false; }
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredInstall=e;
+  maybeOfferInstall();
+});
+function maybeOfferInstall(){
+  if(!S) return;                                       // wait until a farmer is playing
+  if(isStandalone()){ try{localStorage.setItem(A2HS_KEY,'done');}catch(e){} return; }
+  try{ if(localStorage.getItem(A2HS_KEY)) return; }catch(e){ return; }
+  const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  const installBtn='<button id="a2hsGo" style="width:100%;border:0;border-radius:14px;padding:14px;'+
+    'font-size:15px;font-weight:800;color:#fff;background:linear-gradient(180deg,#34b56f,#238b52);'+
+    'cursor:pointer;margin-bottom:10px">📲 Add to Home Screen</button>';
+  if(deferredInstall){
+    try{localStorage.setItem(A2HS_KEY,'done');}catch(e){}   // one-time offer
+    showModal('📲','Put the farm on your phone!',
+      '<p>Install <b>New Moon Farm</b> on your home screen — it gets its own icon, opens '+
+      'full-screen like a real app, and your abalone keep growing while it\'s closed.</p>'+installBtn,
+      'Not now');
+  }else if(isIOS){
+    try{localStorage.setItem(A2HS_KEY,'done');}catch(e){}
+    showModal('📲','Put the farm on your phone!',
+      '<p>Install <b>New Moon Farm</b> on your home screen — it gets its own icon and opens '+
+      'full-screen like a real app:</p>'+
+      '<div class="fact">1️⃣ Tap the <b>Share</b> button below (the square with the ↑ arrow)<br><br>'+
+      '2️⃣ Scroll down and tap <b>"Add to Home Screen"</b><br><br>'+
+      '3️⃣ Tap <b>Add</b> — done! 🦪</div>',
+      'Got it!');
+  }
+}
+
+/* ---------------- full-screen tank inspection ---------------- */
+let zoomOpen=false, zoomTank=0, zoomSig='', zcardTimer=null;
+function zoomTankSig(tk){
+  return [tk.tier,tk.count,tk.stage,tk.broken?'b'+tk.fixTaps:'-',tk.feed>95?1:0,tk.clean>95?1:0].join(',');
+}
+function openZoom(i){ zoomOpen=true; zoomTank=i; zoomSig=''; renderZoom(); sfx.tap(); }
+function closeZoom(){ zoomOpen=false; $('#zoomRoot').innerHTML=''; if(zcardTimer){clearTimeout(zcardTimer);zcardTimer=null;} }
+function buildZoom(){
+  const i=zoomTank, tk=S.tanks[i]; if(!tk){ closeZoom(); return; }
+  const st=STAGES[tk.stage], empty=tk.count<=0;
+  const dirty=tk.clean<25?'dirty2':tk.clean<55?'dirty1':'';
+  let abas='';
+  if(!empty){
+    const nShowZ=Math.min(26, Math.max(4, Math.round(tk.count/4)));
+    const nowS=Date.now()/1000;
+    for(let k=0;k<nShowZ;k++){
+      const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
+      const left=(4+r1*74).toFixed(1), top=(8+r2*66).toFixed(1);
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
+      abas+='<svg class="aba abasvg s'+tk.stage+'" data-k="'+k+'" style="left:'+left+'%;top:'+top+'%;'+
+        'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+    }
+  }
+  let bubbles='';
+  if(!tk.broken && !empty)
+    for(let k=0;k<8;k++)
+      bubbles+='<span class="bubble" style="left:'+(5+k*12)+'%;width:'+(5+k%3*4)+'px;height:'+(5+k%3*4)+'px;animation-duration:'+(3+k*0.6)+'s;animation-delay:'+(k*0.4)+'s"></span>';
+  const grade=st.grade;
+  let mainBtn;
+  if(empty) mainBtn='<button class="act stock" data-a="stock" data-i="'+i+'">🫧 Stock spat · '+fmtR(TANK_DEFS[tk.tier].batch*SPAT_COST_EACH)+'</button>';
+  else if(grade>=0) mainBtn='<button class="act harvest" data-a="harvest" data-i="'+i+'">🧺 Harvest '+GRADES[grade].name.split(' ')[0]+'</button>';
+  else mainBtn='<button class="act boost" data-a="boost" data-i="'+i+'">✨ Boost · 3🫧</button>';
+  const growPct=st.dur?Math.floor(tk.prog*100):100;
+  const nextName=st.dur?STAGES[tk.stage+1].name:'Fully grown';
+  $('#zoomRoot').innerHTML=
+  '<div id="zoomWrap" class="'+dirty+'">'+
+    '<div class="zhead">'+abaIcon(empty?2:tk.stage,26)+' <span><b>Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</b>'+
+      '<span class="sub">'+(empty?'Stock new spat from the hatchery':tk.count+' abalone · tap one to inspect')+'</span></span>'+
+      '<button class="iconbtn" id="zoomClose">✕</button></div>'+
+    '<div class="zwater" id="zwater" style="--abaW:'+(abaWidth(tk)*2.4)+'px">'+
+      '<div class="waterline"></div>'+bubbles+abas+
+      (empty?'<div class="zhint" style="top:45%">Tank empty — stock new spat below!</div>':'<div class="zhint">🔍 Tap an abalone to inspect it</div>')+
+      (tk.broken?'<button class="pumpwarn" data-a="fix" data-i="'+i+'">🔧 PUMP DOWN! TAP '+(S.ups.pumps>=3?1:3-tk.fixTaps)+'×</button>':'')+
+      '<div id="zcard" class="zcard hidden"></div>'+
+    '</div>'+
+    '<div class="zpanel">'+
+      (empty?'':'<div class="meters">'+
+        '<div class="meter"><label>🌿 Feed <span id="zfeedL">'+Math.floor(tk.feed)+'%</span></label><div class="bar"><i id="zfeedI" class="'+barClass(tk.feed)+'" style="width:'+tk.feed+'%"></i></div></div>'+
+        '<div class="meter"><label>💧 Water <span id="zcleanL">'+Math.floor(tk.clean)+'%</span></label><div class="bar"><i id="zcleanI" class="'+barClass(tk.clean)+'" style="width:'+tk.clean+'%"></i></div></div>'+
+      '</div>'+
+      '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="zgrowI" style="width:'+growPct+'%"></i></div><span id="zgrowL">'+growPct+'%</span></div>')+
+      '<div class="btnrow">'+
+        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
+        '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
+        mainBtn+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function renderZoom(){
+  const tk=S.tanks[zoomTank]; if(!tk){ closeZoom(); return; }
+  const sig=zoomTankSig(tk);
+  if(sig!==zoomSig){ zoomSig=sig; buildZoom(); return; }
+  const set=(id,fn)=>{const el=document.getElementById(id); if(el) fn(el);};
+  const w=document.getElementById('zoomWrap');
+  if(w){ const d=tk.clean<25?'dirty2':tk.clean<55?'dirty1':''; if(w.className!==d) w.className=d; }
+  if(tk.count<=0) return;
+  set('zfeedL', el=>el.textContent=Math.floor(tk.feed)+'%');
+  set('zfeedI', el=>{el.style.width=tk.feed+'%'; el.className=barClass(tk.feed);});
+  set('zcleanL',el=>el.textContent=Math.floor(tk.clean)+'%');
+  set('zcleanI',el=>{el.style.width=tk.clean+'%'; el.className=barClass(tk.clean);});
+  const pct=STAGES[tk.stage].dur?Math.floor(tk.prog*100):100;
+  set('zgrowI', el=>el.style.width=pct+'%');
+  set('zgrowL', el=>el.textContent=pct+'%');
+  set('zwater', el=>el.style.setProperty('--abaW',(abaWidth(tk)*2.4)+'px'));
+}
+const ABA_MM=[[6,20],[20,45],[45,70],[70,95],[95,125]];
+const ABA_FLAVOR=['Holding on tight with its strong foot.','Its shell shimmers with mother-of-pearl.',
+  'It has been grazing kelp all morning.','Breathing through the pore row in its shell.',
+  'A future export-grade beauty.','It likes this corner of the tank.'];
+function showInspect(k){
+  const tk=S.tanks[zoomTank]; if(!tk||tk.count<=0) return;
+  const st=STAGES[tk.stage];
+  const [a,b]=ABA_MM[tk.stage];
+  const jit=0.9+0.2*rnd(zoomTank*211+k*17);
+  const len=Math.round((a+(b-a)*(st.dur?clamp(tk.prog,0,1):0.65))*jit);
+  const wgt=Math.max(1,Math.round(0.00025*len*len*len));
+  let cond;
+  if(tk.broken) cond='⚠️ No fresh seawater — fix the pump!';
+  else if(tk.feed<40) cond='🌿 Hungry — drop some kelp!';
+  else if(tk.clean<35) cond='🧽 The water is murky — time to clean.';
+  else cond='😊 Happy, healthy and grazing.';
+  const flav=ABA_FLAVOR[Math.floor(rnd(k*31+tk.stage*7)*ABA_FLAVOR.length)%ABA_FLAVOR.length];
+  const card=document.getElementById('zcard'); if(!card) return;
+  card.innerHTML='<b>'+abaIcon(tk.stage,20)+' '+st.name+' abalone #'+(k+1)+'</b>'+
+    '<div class="zrow"><span>📏 '+(len>=10?(len/10).toFixed(1)+' cm':len+' mm')+' shell</span><span>⚖️ ±'+(wgt>=1000?(wgt/1000).toFixed(1)+' kg':wgt+' g')+'</span></div>'+
+    '<div class="cond">'+cond+'</div><div class="flav">'+flav+'</div>';
+  card.classList.remove('hidden');
+  sfx.tap();
+  if(zcardTimer) clearTimeout(zcardTimer);
+  zcardTimer=setTimeout(()=>card.classList.add('hidden'),6000);
+}
+
+/* ---------------- rendering ---------------- */
+function barClass(v){ return v>55?'ok':v>25?'mid':'low'; }
+function rnd(seed){ const x=Math.sin(seed*127.1+311.7)*43758.5453; return x-Math.floor(x); }
+/* abalone size grows continuously through each stage */
+const ABA_W=[15,19,24,29,35];
+function abaWidth(tk){
+  if(!STAGES[tk.stage].dur) return 36;
+  const a=ABA_W[tk.stage], b=ABA_W[Math.min(4,tk.stage+1)];
+  return Math.round((a+(b-a)*clamp(tk.prog,0,1))*10)/10;
+}
+
+function renderHeader(){
+  $('#money').textContent=fmtR(S.money);
+  $('#pearls').textContent=S.pearls;
+  $('#lvl').textContent='LV '+S.level;
+  $('#xpfill').style.width=Math.min(100,100*S.xp/xpNeed(S.level))+'%';
+  $('#streak').textContent='🔥'+S.streak;
+  $('#soundBtn').textContent=S.sound?'🔊':'🔇';
+  const mb=$('#musicBtn'); mb.textContent='🎵'; mb.style.opacity=S.music?'1':'0.4';
+  $('#pname').textContent='🧑‍🌾 '+(S.name||'FARMER').toUpperCase()+' · HERMANUS';
+}
+
+function tankHTML(tk,i){
+  const st=STAGES[tk.stage];
+  const empty=tk.count<=0;
+  const dirty = tk.clean<25?'dirty2':tk.clean<55?'dirty1':'';
+  const nShow=Math.min(14, Math.max(3,Math.round(tk.count/10)));
+  let abas='';
+  if(!empty){
+    const nowS=Date.now()/1000;
+    for(let k=0;k<nShow;k++){
+      const r1=rnd(i*37+k), r2=rnd(i*57+k+99), r3=rnd(i*91+k+7), r4=rnd(i*13+k+31);
+      const left=(4+r1*72).toFixed(1), top=(10+r2*52).toFixed(1);
+      const crawl=['crawlA','crawlB','crawlC'][k%3];
+      const dDur=45+r3*25, wDur=9+r1*6;   // crawling pace: 45-70s per circuit
+      // phase from wall-clock so rebuilds never make them jump
+      const dDel=(-((nowS+r4*80)%dDur)).toFixed(2), wDel=(-((nowS+r2*12)%wDur)).toFixed(2);
+      abas+='<svg class="aba abasvg s'+tk.stage+'" style="left:'+left+'%;top:'+top+'%;'+
+        'animation:wiggle '+wDur.toFixed(2)+'s ease-in-out '+wDel+'s infinite, '+
+        crawl+' '+dDur.toFixed(1)+'s linear '+dDel+'s infinite" viewBox="0 0 64 48"><use href="#abaShape"/></svg>';
+    }
+  }
+  let bubbles='';
+  if(!tk.broken && !empty)
+    for(let k=0;k<5;k++)
+      bubbles+='<span class="bubble" style="left:'+(8+k*19)+'%;width:'+(4+k%3*3)+'px;height:'+(4+k%3*3)+'px;animation-duration:'+(2.4+k*0.7)+'s;animation-delay:'+(k*0.5)+'s"></span>';
+  const grade=st.grade;
+  let mainBtn;
+  if(empty){
+    mainBtn='<button class="act stock" data-a="stock" data-i="'+i+'">🫧 Stock spat · '+fmtR(TANK_DEFS[tk.tier].batch*SPAT_COST_EACH)+'</button>';
+  }else if(grade>=0){
+    mainBtn='<button class="act harvest" data-a="harvest" data-i="'+i+'">🧺 Harvest '+GRADES[grade].name.split(' ')[0]+'</button>';
+  }else{
+    mainBtn='<button class="act boost" data-a="boost" data-i="'+i+'">✨ Boost · 3🫧</button>';
+  }
+  const growPct = st.dur? Math.floor(tk.prog*100) : 100;
+  const nextName = st.dur? STAGES[tk.stage+1].name : 'Fully grown';
+  return '<div class="tank '+dirty+'" id="tank'+i+'">'+
+    '<div class="water" data-zoom="'+i+'"><div class="waterline"></div>'+bubbles+
+      '<div class="abas" id="t'+i+'abas" style="--abaW:'+abaWidth(tk)+'px">'+
+        (empty?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#eaf7ff;font-weight:700">Tank empty — stock new spat!</span>':abas)+'</div>'+
+      '<span class="stagechip">Tank '+(i+1)+' · '+(empty?'Empty':st.name)+'</span>'+
+      (empty?'':'<span class="countchip">'+tk.count+' '+abaIcon(tk.stage,14)+'</span>')+
+      (tk.broken?'<button class="pumpwarn" data-a="fix" data-i="'+i+'">🔧 PUMP DOWN! TAP '+(S.ups.pumps>=3?1:3-tk.fixTaps)+'×</button>':'')+
+    '</div>'+
+    '<div class="tankbody">'+
+      (empty?'':'<div class="meters">'+
+        '<div class="meter"><label>🌿 Feed <span id="t'+i+'feedL">'+Math.floor(tk.feed)+'%</span></label><div class="bar"><i id="t'+i+'feedI" class="'+barClass(tk.feed)+'" style="width:'+tk.feed+'%"></i></div></div>'+
+        '<div class="meter"><label>💧 Water <span id="t'+i+'cleanL">'+Math.floor(tk.clean)+'%</span></label><div class="bar"><i id="t'+i+'cleanI" class="'+barClass(tk.clean)+'" style="width:'+tk.clean+'%"></i></div></div>'+
+      '</div>'+
+      '<div class="growrow"><span>'+(st.dur?('→ '+nextName):'👑 '+nextName)+'</span><div class="bar"><i id="t'+i+'growI" style="width:'+growPct+'%"></i></div><span id="t'+i+'growL">'+growPct+'%</span></div>')+
+      '<div class="btnrow">'+
+        (empty?'':'<button class="act feed" data-a="feed" data-i="'+i+'" '+(tk.feed>95?'disabled':'')+'>🌿 Feed R'+FEED_COST+'</button>'+
+        '<button class="act clean" data-a="clean" data-i="'+i+'" '+(tk.clean>95?'disabled':'')+'>🧽 Clean</button>')+
+        mainBtn+
+      '</div>'+
+    '</div></div>';
+}
+
+/* Rebuild tank DOM only when structure changes; otherwise update values in
+   place so the slow drift/wiggle animations run uninterrupted. */
+let farmSigLast='';
+function farmSig(){
+  return S.tanks.map(tk=>[tk.tier,tk.count,tk.stage,tk.broken?'b'+tk.fixTaps:'-',
+    tk.feed>95?1:0, tk.clean>95?1:0].join(',')).join('|');
+}
+function renderFarm(){
+  const sig=farmSig();
+  if(sig!==farmSigLast){
+    farmSigLast=sig;
+    $('#farmSub').textContent=S.tanks.length+' / '+TANK_DEFS.length+' tanks';
+    $('#tanks').innerHTML=S.tanks.map(tankHTML).join('');
+    const bt=$('#buyTank');
+    if(S.tanks.length<TANK_DEFS.length){
+      const d=TANK_DEFS[S.tanks.length];
+      bt.classList.remove('hidden');
+      bt.innerHTML='➕ Build Tank '+(S.tanks.length+1)+' — '+fmtR(d.cost)+'<small>Holds '+d.batch+' abalone</small>';
+    }else bt.classList.add('hidden');
+    return;
+  }
+  const set=(id,fn)=>{const el=document.getElementById(id); if(el) fn(el);};
+  S.tanks.forEach((tk,i)=>{
+    set('tank'+i,el=>{const d=tk.clean<25?'dirty2':tk.clean<55?'dirty1':''; const c='tank'+(d?' '+d:''); if(el.className!==c) el.className=c;});
+    if(tk.count<=0) return;
+    set('t'+i+'feedL', el=>el.textContent=Math.floor(tk.feed)+'%');
+    set('t'+i+'feedI', el=>{el.style.width=tk.feed+'%'; el.className=barClass(tk.feed);});
+    set('t'+i+'cleanL',el=>el.textContent=Math.floor(tk.clean)+'%');
+    set('t'+i+'cleanI',el=>{el.style.width=tk.clean+'%'; el.className=barClass(tk.clean);});
+    const pct=STAGES[tk.stage].dur?Math.floor(tk.prog*100):100;
+    set('t'+i+'growI', el=>el.style.width=pct+'%');
+    set('t'+i+'growL', el=>el.textContent=pct+'%');
+    set('t'+i+'abas',  el=>el.style.setProperty('--abaW',abaWidth(tk)+'px'));
+  });
+}
+
+function renderCannery(){
+  const inv=GRADES.map(g=>'<div class="invrow"><span>'+abaIcon(g.st,22)+' '+g.name+'</span><span class="qty">'+S.inv[g.key]+'</span>'+
+    '<button class="smallbtn green" data-can="'+g.key+'" '+((S.inv[g.key]<CAN_ABA||S.canJob)?'disabled':'')+'>Can ('+CAN_ABA+'→1)</button></div>').join('');
+  $('#harvestInv').innerHTML=inv || '';
+  $('#canCap').textContent='· batch of '+canBatchCap()+' · '+Math.round(canBatchTime())+'s';
+  const line=$('#canLine');
+  if(S.canJob){
+    const g=GRADES[gIdx(S.canJob.grade)];
+    const pct=100*(1-S.canJob.remain/canBatchTime());
+    line.innerHTML='<p style="font-size:13px">Packing <b>'+S.canJob.cans+' '+g.canName+'s</b>… '+Math.ceil(Math.max(0,S.canJob.remain))+'s</p>'+
+      '<div class="progressline"><i style="width:'+clamp(pct,0,100)+'%"></i></div>';
+  }else line.innerHTML='<p style="font-size:12px;color:var(--muted)">Line idle. Harvest abalone and start a batch — canned abalone sells for much more!</p>';
+  $('#canInv').innerHTML=GRADES.map(g=>'<div class="invrow"><span>'+canIconHTML(g.key,24)+' '+g.canName+'</span><span class="qty">'+S.cans[g.key]+'</span></div>').join('');
+}
+
+function renderMarket(){
+  const m=marketMult();
+  const pct=Math.round(m*100);
+  const dir = m>mktPrev+0.001?'up':m<mktPrev-0.001?'down':'';
+  $('#marketIndex').innerHTML='<span class="'+(pct>=100?'up':'down')+'">'+pct+'%</span>'+
+    (S.event&&S.event.type==='export'?' <span style="font-size:13px;color:var(--gold-d)">📦 EXPORT ORDER!</span>':'');
+  $('#marketTrend').textContent=dir==='up'?'▲':dir==='down'?'▼':'—';
+  $('#marketTrend').className='pricearrow '+dir;
+  $('#sellCans').innerHTML=GRADES.map(g=>{
+    const p=Math.round(g.can*m);
+    return '<div class="invrow"><span>'+canIconHTML(g.key,24)+' '+g.canName+' ×'+S.cans[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
+      '<button class="smallbtn gold" data-sellcan="'+g.key+'" '+(S.cans[g.key]?'':'disabled')+'>Sell all</button></div>';
+  }).join('');
+  $('#sellFresh').innerHTML=GRADES.map(g=>{
+    const p=Math.round(g.fresh*m);
+    return '<div class="invrow"><span>'+abaIcon(g.st,22)+' '+g.name+' ×'+S.inv[g.key]+'</span><span class="qty">'+fmtR(p)+' ea</span>'+
+      '<button class="smallbtn" data-sellfresh="'+g.key+'" '+(S.inv[g.key]?'':'disabled')+'>Sell all</button></div>';
+  }).join('');
+}
+
+function renderUpgrades(){
+  $('#upgrades').innerHTML=Object.entries(UPGRADES).map(([k,u])=>{
+    const lv=S.ups[k];
+    const dots='<div class="dots">'+Array.from({length:u.max},(_,d)=>'<span class="dot'+(d<lv?' on':'')+'"></span>').join('')+'</div>';
+    const btn = lv>=u.max ? '<button class="smallbtn" disabled>MAX</button>'
+      : '<button class="smallbtn gold" data-upg="'+k+'">'+fmtR(u.costs[lv])+'</button>';
+    return '<div class="upg"><div class="ic">'+u.icon+'</div><div class="info"><b>'+u.name+'</b><span>'+u.desc+'</span>'+dots+'</div>'+btn+'</div>';
+  }).join('');
+}
+
+function renderMore(){
+  $('#achList').innerHTML=ACHIEVEMENTS.map(a=>{
+    const done=S.ach.includes(a.id);
+    return '<div class="ach'+(done?' done':'')+'"><div class="ic">'+a.icon+'</div><div class="t"><b>'+a.name+'</b><span>'+a.desc+' · +'+a.pearls+'🫧</span></div></div>';
+  }).join('');
+  $('#factList').innerHTML=FACTS.slice(0,S.factsUnlocked).map((f,i)=>'<div class="invrow" style="display:block;line-height:1.5">💡 '+f+'</div>').join('')+
+    (S.factsUnlocked<FACTS.length?'<p style="font-size:11px;color:var(--muted);margin-top:8px">Level up to unlock '+(FACTS.length-S.factsUnlocked)+' more facts!</p>':'');
+}
+
+function renderBadges(){
+  const harvestReady=S.tanks.filter(t=>t.count>0&&STAGES[t.stage].grade>=0).length + S.tanks.filter(t=>t.broken).length;
+  const canReady=(!S.canJob && GRADES.some(g=>S.inv[g.key]>=CAN_ABA))?1:0;
+  const sellReady=GRADES.some(g=>S.cans[g.key]>0)?1:0;
+  const set=(id,n)=>{const b=$(id); if(n){b.classList.remove('hidden');b.textContent=n;}else b.classList.add('hidden');};
+  set('#bFarm',harvestReady); set('#bCan',canReady); set('#bMkt',sellReady&&marketMult()>1.05?1:0);
+}
+
+let activeTab='farm';
+function renderAll(){
+  renderHeader();
+  if(activeTab==='farm') renderFarm();
+  else if(activeTab==='cannery') renderCannery();
+  else if(activeTab==='market') renderMarket();
+  else if(activeTab==='upgrades') renderUpgrades();
+  else renderMore();
+  renderBadges();
+  if(zoomOpen) renderZoom();
+  mktPrev=marketMult();
+}
+
+/* ---------------- offline catch-up ---------------- */
+function offlineCatchup(){
+  let dt=(Date.now()-S.last)/1000;
+  if(dt<120) { simulate(dt,true); return; }
+  dt=Math.min(dt, OFFLINE_CAP_S);
+  let stages=0,cans=0;
+  const step=30;
+  for(let t=0;t<dt;t+=step){
+    const r=simulate(Math.min(step,dt-t), true);
+    stages+=r.stages; cans+=r.cansDone;
+  }
+  const h=Math.floor(dt/3600), m=Math.floor((dt%3600)/60);
+  const away=(h?h+'h ':'')+m+'m';
+  showModal('🌅','Welcome back, '+esc(S.name)+'!',
+    '<p>Your farm kept working while you were away <b>'+away+'</b>:</p>'+
+    '<div class="fact">'+
+      '📈 Growth stages advanced: <b>'+stages+'</b><br>'+
+      (cans?('🥫 Cans finished: <b>'+cans+'</b><br>'):'')+
+      '🌿 The abalone are hungry and the tanks need attention!'+
+    '</div>');
+}
+
+/* ---------------- events wiring ---------------- */
+document.addEventListener('click',e=>{
+  if(!S) return; // profile screens handle their own clicks before a farmer is chosen
+  const b=e.target.closest('button');
+  if(!b){
+    const ab=e.target.closest('#zoomWrap svg.aba');
+    if(ab){ showInspect(+ab.dataset.k); return; }
+    if(e.target.closest('#zcard')){ document.getElementById('zcard').classList.add('hidden'); return; }
+    const w=e.target.closest('.water[data-zoom]');
+    if(w && !zoomOpen) openZoom(+w.dataset.zoom);
+    return;
+  }
+  if(b.id==='zoomClose'){ closeZoom(); return; }
+  if(b.id==='a2hsGo'){
+    if(deferredInstall){ try{ deferredInstall.prompt(); }catch(e){} deferredInstall=null; }
+    const c=b.closest('.modalback'); const cl=c&&c.querySelector('button.close'); if(cl) cl.click();
+    return;
+  }
+  if(b.closest('.modalback') && !b.dataset.tab) return; // profile overlays manage themselves
+  if(b.dataset.a){
+    const i=+b.dataset.i;
+    if(b.dataset.a==='feed') doFeed(i,e);
+    else if(b.dataset.a==='clean') doClean(i,e);
+    else if(b.dataset.a==='fix') doFix(i,e);
+    else if(b.dataset.a==='harvest') doHarvest(i);
+    else if(b.dataset.a==='stock') doStock(i);
+    else if(b.dataset.a==='boost') doBoost(i);
+    return;
+  }
+  if(b.dataset.can){ doCanStart(b.dataset.can); return; }
+  if(b.dataset.sellcan){ doSellCans(b.dataset.sellcan); return; }
+  if(b.dataset.sellfresh){ doSellFresh(b.dataset.sellfresh); return; }
+  if(b.dataset.upg){ doUpgrade(b.dataset.upg); return; }
+  if(b.dataset.tab){
+    activeTab=b.dataset.tab;
+    document.querySelectorAll('nav button').forEach(n=>n.classList.toggle('active',n===b));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-'+activeTab));
+    sfx.tap(); renderAll(); return;
+  }
+  if(b.id==='buyTank'){ doBuyTank(); return; }
+  if(b.id==='soundBtn'||b.id==='soundBtn2'){ S.sound=!S.sound; renderHeader(); toast(S.sound?'🔊 Sound on':'🔇 Sound off'); return; }
+  if(b.id==='musicBtn'||b.id==='musicBtn2'){ setMusic(!S.music); toast(S.music?'🎵 Music on':'🎵 Music off'); return; }
+  if(b.id==='renameBtn'){
+    showNameModal('Change your name','Pick a new screen name for this farmer.',S.name,
+      v=>{ S.name=v; save(); renderHeader(); toast('👋 Howzit, '+esc(v)+'!'); }, true);
+    return;
+  }
+  if(b.id==='switchBtn'){ save(); showPicker(true); return; }
+  if(b.id==='resetBtn'){
+    if(confirm('Really reset '+S.name+'\'s farm? Other farmers on this device are not affected. This cannot be undone.')){
+      try{ localStorage.removeItem(saveSlot(profileId)); }catch(e){}
+      const keepName=S.name;
+      S=freshState(); S.name=keepName; farmSigLast=''; activeTab='farm';
+      document.querySelectorAll('nav button').forEach((n,i)=>n.classList.toggle('active',i===0));
+      document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-farm'));
+      renderAll(); save();
+    }
+    return;
+  }
+});
+
+/* ---------------- main loop ---------------- */
+let lastTick=Date.now();
+function tick(){
+  if(!S) return;               // waiting on the profile screens
+  const now=Date.now();
+  let dt=(now-lastTick)/1000; lastTick=now;
+  if(dt>90){ offlineCatchup(); dt=0.5; }
+  dt=Math.min(dt,90);
+  simulate(dt,false);
+  maybeEvent(dt);
+  setTicker();
+  checkAchievements();
+  renderAll();
+}
+setInterval(tick,1000);
+setInterval(save,10000);
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) save(); else lastTick=Date.now(); });
+/* browsers only allow audio after a user gesture — start the ocean on first tap */
+document.addEventListener('pointerdown',()=>startMusic(),{passive:true});
+window.addEventListener('pagehide',save);
+
+/* ---------------- boot ---------------- */
+(function boot(){
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+  let ps=loadProfiles();
+  if(!ps.length){
+    // no upfront name screen: silently start as "Farmer" (rename/switch live in Settings)
+    const id=newProfileId();
+    ps=[{id, name:'Farmer', level:1, money:500, last:Date.now()}];
+    saveProfiles(ps);
+    const legacy=localStorage.getItem(SAVE_KEY);   // pre-profiles save migrates silently
+    if(legacy){ try{ localStorage.setItem(saveSlot(id), legacy); localStorage.removeItem(SAVE_KEY); }catch(e){} }
+    enterGame(id);
+    return;
+  }
+  const last=localStorage.getItem(LAST_KEY);
+  const p=ps.find(x=>x.id===last) || ps.slice().sort((a,b)=>(b.last||0)-(a.last||0))[0];
+  enterGame(p.id);
+})();
+</script>
+</body>
+</html>
